@@ -30,7 +30,18 @@ class MainActivity : ComponentActivity() {
                     composable("Films") { FilmsScreen(navController, windowSizeClass, viewModel) }
                     composable("Acteurs") { ActeurScreen(navController, windowSizeClass, viewModel) }
                     composable("Series") { SerieScreen(navController, windowSizeClass, viewModel) }
-
+                    composable("FilmDetail/{movieID}") { backStackEntry ->
+                        val movieID = backStackEntry.arguments?.getString("movieID")?: ""
+                        FilmDetail(navController,windowSizeClass, movieID, viewModel)
+                    }
+                    composable("ActeursDetail/{movieID}") { backStackEntry ->
+                        val movieID = backStackEntry.arguments?.getString("movieID")?: ""
+                        ActeurDetail(navController, movieID)
+                    }
+                    composable("SeriesDetail/{movieID}") { backStackEntry ->
+                        val movieID = backStackEntry.arguments?.getString("movieID")?: ""
+                        SerieDetail(navController, movieID)
+                    }
                 }
              }
             }

@@ -26,6 +26,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -141,12 +142,10 @@ fun FilmsScreen(
         )},
 
         bottomBar = {
-
-            BottomNavigation (
+            BottomNavigation(
                 modifier = Modifier.background(color = Color.Red)
             ) {
-
-                var selectedItem by remember { mutableIntStateOf(0) }
+                var selectedItem by remember { mutableStateOf(0) }
                 val items = listOf("Films", "Séries", "Acteurs")
                 val icons = listOf(
                     painterResource(id = R.drawable.icon_film),
@@ -154,20 +153,23 @@ fun FilmsScreen(
                     painterResource(id = R.drawable.icon_acteur)
                 )
                 items.forEachIndexed { index, item ->
+                    val destination = when (index) {
+                        0 -> "Films"
+                        1 -> "Series"
+                        2 -> "Acteurs"
+                        else -> "fallback_destination"
+                    }
+
                     NavigationBarItem(
                         icon = { Image(painter = icons[index], contentDescription = "Icône")},
                         label = { Text(item) },
                         selected = selectedItem == index,
                         onClick = {
-                            when (index) {
-                            0 -> navController.navigate("Films")
-                            1 -> navController.navigate("Series")
-                            2 -> navController.navigate("Acteurs")
-                        }
+                            selectedItem = index
+                            navController.navigate(route = destination)
                         }
                     )
                 }
-
             }
         }
     ) {
@@ -186,53 +188,65 @@ fun FilmsWeek(navController: NavController, windowClass: WindowSizeClass, viewMo
                 WindowWidthSizeClass.Compact -> {
                     val movies by viewModel.movies.collectAsState()
 
-                    val name = "soleil"
+                    //val name = "soleil"
+                    //if (movies.isEmpty()) viewModel.searchMovies(name)
+                    if (movies.isEmpty()) {
+                        viewModel.FilmsWeek()
+                    }
+                    if (movies.isNotEmpty()){
+                        LazyVerticalGrid(columns = GridCells.Fixed(2)) {
+                            items(movies) { movie ->
+                                val imageUrl = "https://image.tmdb.org/t/p/w780${movie.poster_path}"
 
-                    if (movies.isEmpty()) viewModel.searchMovies(name)
-
-                    LazyVerticalGrid(columns = GridCells.Fixed(2)) {
-                        items(movies) { movie ->
-                            val imageUrl = "https://image.tmdb.org/t/p/w780${movie.poster_path}"
-                            Column (
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                                verticalArrangement = Arrangement.Center
-                            ) {
-                                Image(
-                                    painter = rememberAsyncImagePainter(
-                                        ImageRequest.Builder(LocalContext.current).data(data = imageUrl)
-                                            .apply(block = fun ImageRequest.Builder.() {
-                                                crossfade(true)
-                                                size(450, 500)
-                                            }).build()
-                                    ),
-                                    contentDescription = "Image film",
+                                FloatingActionButton(
+                                    onClick = { navController.navigate("FilmDetail/${movie.id}") },
                                     modifier = Modifier
-                                        .padding(start = 5.dp, end = 5.dp)
-                                        .width(200.dp)
-                                        .height(300.dp)
-                                )
+                                        .padding(10.dp)
+                                        .size(425.dp)
+                                ) {
+                                Column (
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                    verticalArrangement = Arrangement.Center
+                                ) {
+                                    Image(
+                                        painter = rememberAsyncImagePainter(
+                                            ImageRequest.Builder(LocalContext.current).data(data = imageUrl)
+                                                .apply(block = fun ImageRequest.Builder.() {
+                                                    crossfade(true)
+                                                    size(450, 500)
+                                                }).build()
+                                        ),
+                                        contentDescription = "Image film",
+                                        modifier = Modifier
+                                            .padding(start = 5.dp, end = 5.dp)
+                                            .width(200.dp)
+                                            .height(300.dp)
+                                    )
 
-                                Text(
-                                    text = movie.original_title,
-                                    textAlign = TextAlign.Center,
-                                    fontSize = 20.sp,
-                                    fontWeight = FontWeight.Bold,
-                                )
-                                Spacer(Modifier.size(5.dp))
-                                Text(
-                                    text = movie.release_date,
-                                    style = MaterialTheme.typography.titleLarge,
-                                    fontSize = 14.sp,
-                                    fontWeight = FontWeight.Medium,
-                                    fontStyle = FontStyle.Italic,
-                                )
-                                Spacer(Modifier.size(30.dp))
+                                    Text(
+                                        text = movie.original_title,
+                                        textAlign = TextAlign.Center,
+                                        fontSize = 20.sp,
+                                        fontWeight = FontWeight.Bold,
+                                    )
+                                    Spacer(Modifier.size(5.dp))
+                                    Text(
+                                        text = movie.release_date,
+                                        style = MaterialTheme.typography.titleLarge,
+                                        fontSize = 14.sp,
+                                        fontWeight = FontWeight.Medium,
+                                        fontStyle = FontStyle.Italic,
+                                    )
+                                    Spacer(Modifier.size(30.dp))
+                                }
+                            }
                             }
                         }
                     }
                 }
             }
     }
+
 }
 
 @Composable

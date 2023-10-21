@@ -26,6 +26,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.NavigationBarItem
@@ -48,9 +49,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
@@ -136,12 +140,10 @@ fun SerieScreen(
         },
 
         bottomBar = {
-
-            BottomNavigation (
+            BottomNavigation(
                 modifier = Modifier.background(color = Color.Red)
             ) {
-
-                var selectedItem by remember { mutableIntStateOf(1) }
+                var selectedItem by remember { mutableStateOf(1) }
                 val items = listOf("Films", "Séries", "Acteurs")
                 val icons = listOf(
                     painterResource(id = R.drawable.icon_film),
@@ -149,20 +151,23 @@ fun SerieScreen(
                     painterResource(id = R.drawable.icon_acteur)
                 )
                 items.forEachIndexed { index, item ->
+                    val destination = when (index) {
+                        0 -> "Films"
+                        1 -> "Series"
+                        2 -> "Acteurs"
+                        else -> "fallback_destination"
+                    }
+
                     NavigationBarItem(
-                        icon = { Image(painter = icons[index], contentDescription = "Icône") },
+                        icon = { Image(painter = icons[index], contentDescription = "Icône")},
                         label = { Text(item) },
                         selected = selectedItem == index,
                         onClick = {
-                            when (index) {
-                                0 -> navController.navigate("Films")
-                                1 -> navController.navigate("Series")
-                                2 -> navController.navigate("Acteurs")
-                            }
+                            selectedItem = index
+                            navController.navigate(route = destination)
                         }
                     )
                 }
-
             }
         }
     ) {
@@ -176,36 +181,47 @@ fun SerieWeek(navController: NavController, windowClass: WindowSizeClass,serieVi
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
-        // Contenu principal
-        when (windowClass.widthSizeClass) {
-            WindowWidthSizeClass.Compact -> {
                 val series by serieViewModel.series.collectAsState()
-
-                LazyVerticalGrid(columns = GridCells.Fixed(2)) {
-                    items(series) { serie ->
-                        val imageUrl = "https://image.tmdb.org/t/p/w780${serie.poster_path}"
-                        Column (
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.Center
-                        ) {
-                            Image(
-                                painter = rememberAsyncImagePainter(
-                                    ImageRequest.Builder(LocalContext.current).data(data = imageUrl)
-                                        .apply(block = fun ImageRequest.Builder.() {
-                                            crossfade(true)
-                                            size(450, 500)
-                                        }).build()
-                                ),
-                                contentDescription = "Image acteur",
-                                modifier = Modifier
-                                    .padding(start = 5.dp, end = 5.dp)
-                                    .width(200.dp)
-                                    .height(300.dp)
-                            )
-                            Spacer(Modifier.size(30.dp))
-                        }
+        if (series.isEmpty()){
+            serieViewModel.SeriesWeek()
+        }
+        if (series.isNotEmpty()){
+            LazyVerticalGrid(columns = GridCells.Fixed(2)) {
+                items(series) { serie ->
+                    val imageUrl = "https://image.tmdb.org/t/p/w780${serie.poster_path}"
+                    FloatingActionButton(
+                        onClick = { navController.navigate("InfosFilms/${serie.id}") },
+                        modifier = Modifier
+                            .padding(10.dp)
+                            .size(350.dp)
+                    ){
+                    Column (
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        Image(
+                            painter = rememberAsyncImagePainter(
+                                ImageRequest.Builder(LocalContext.current).data(data = imageUrl)
+                                    .apply(block = fun ImageRequest.Builder.() {
+                                        crossfade(true)
+                                        size(450, 500)
+                                    }).build()
+                            ),
+                            contentDescription = "Image serie",
+                            modifier = Modifier
+                                .padding(start = 5.dp, end = 5.dp)
+                                .width(200.dp)
+                                .height(300.dp)
+                        )
+                        Text(
+                            text = serie.name,
+                            textAlign = TextAlign.Center,
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold,
+                        )
+                        Spacer(Modifier.size(10.dp))
                     }
-                }
+                }}
             }
         }
     }
