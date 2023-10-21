@@ -61,7 +61,6 @@ import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 
 
-
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -156,10 +155,16 @@ fun FilmsScreen(
                 )
                 items.forEachIndexed { index, item ->
                     NavigationBarItem(
-                        icon = { Image(painter = icons[index], contentDescription = "Icône de film")},
+                        icon = { Image(painter = icons[index], contentDescription = "Icône")},
                         label = { Text(item) },
                         selected = selectedItem == index,
-                        onClick = { selectedItem = index }
+                        onClick = {
+                            when (index) {
+                            0 -> navController.navigate("Films")
+                            1 -> navController.navigate("Series")
+                            2 -> navController.navigate("Acteurs")
+                        }
+                        }
                     )
                 }
 

@@ -8,7 +8,10 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 
 class MainViewModel : ViewModel() {
-    val movies = MutableStateFlow<List<MovieWeek>>(listOf())
+    val movies = MutableStateFlow<List<TmdbMovie>>(listOf())
+    val acteurs = MutableStateFlow<List<TmdbActor>>(listOf())
+    val series = MutableStateFlow<List<TmdbSerie>>(listOf())
+
 
     val apikey = "7745960998b08adddf196d8d124b9ae0"
 

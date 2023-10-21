@@ -28,6 +28,9 @@ class MainActivity : ComponentActivity() {
                 NavHost(navController = navController, startDestination = "Profil") {
                     composable("Profil") { Profil(navController, windowSizeClass) }
                     composable("Films") { FilmsScreen(navController, windowSizeClass, viewModel) }
+                    composable("Acteurs") { ActeurScreen(navController, windowSizeClass, viewModel) }
+                    composable("Series") { SerieScreen(navController, windowSizeClass, viewModel) }
+
                 }
              }
             }
