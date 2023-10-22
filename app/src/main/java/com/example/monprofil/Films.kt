@@ -38,6 +38,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -73,7 +74,7 @@ fun FilmsScreen(
     Scaffold(
         topBar = {
             var isSearching by remember { mutableStateOf(false) }
-            var searchText by remember { mutableStateOf("") }
+            var motcle by remember { mutableStateOf("") }
 
             TopAppBar(
 
@@ -115,8 +116,8 @@ fun FilmsScreen(
                     Spacer(modifier = Modifier.width(16.dp))
                     if (isSearching) {
                         TextField(
-                            value = searchText,
-                            onValueChange = { searchText = it },
+                            value = motcle,
+                            onValueChange = { motcle = it },
                             modifier = Modifier
                                 .width(350.dp)
                                 .padding(end = 16.dp),
@@ -128,8 +129,11 @@ fun FilmsScreen(
                             ),
                             keyboardActions = KeyboardActions(
                                 onDone = {
-                                    //FilmsMotCle(navController, windowClass, viewModel)
-                                    isSearching = false
+                                    if (isSearching) {
+                                        isSearching = false
+                                    } else {
+                                        navController.navigate("FilmsSearch")
+                                    }
                                 }
                             )
                         )
@@ -188,22 +192,19 @@ fun FilmsWeek(navController: NavController, windowClass: WindowSizeClass, viewMo
                 WindowWidthSizeClass.Compact -> {
                     val movies by viewModel.movies.collectAsState()
 
-                    //val name = "soleil"
-                    //if (movies.isEmpty()) viewModel.searchMovies(name)
-                    if (movies.isEmpty()) {
+                    LaunchedEffect(true) {
                         viewModel.FilmsWeek()
                     }
-                    if (movies.isNotEmpty()){
-                        LazyVerticalGrid(columns = GridCells.Fixed(2)) {
-                            items(movies) { movie ->
-                                val imageUrl = "https://image.tmdb.org/t/p/w780${movie.poster_path}"
+                    LazyVerticalGrid(columns = GridCells.Fixed(2)) {
+                        items(movies) { movie ->
+                            val imageUrl = "https://image.tmdb.org/t/p/w780${movie.poster_path}"
 
-                                FloatingActionButton(
-                                    onClick = { navController.navigate("FilmDetail/${movie.id}") },
-                                    modifier = Modifier
-                                        .padding(10.dp)
-                                        .size(425.dp)
-                                ) {
+                            FloatingActionButton(
+                                onClick = { navController.navigate("FilmDetail/${movie.id}") },
+                                modifier = Modifier
+                                    .padding(10.dp)
+                                    .size(425.dp)
+                            ) {
                                 Column (
                                     horizontalAlignment = Alignment.CenterHorizontally,
                                     verticalArrangement = Arrangement.Center
@@ -247,10 +248,64 @@ fun FilmsWeek(navController: NavController, windowClass: WindowSizeClass, viewMo
             }
     }
 
-}
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun FilmsMotCle(navController: NavController, windowClass: WindowSizeClass, viewModel: MainViewModel){
+fun FilmsRecherche(navController: NavController, windowClass: WindowSizeClass, motcle: String, viewModel: MainViewModel){
+    val movies by viewModel.movies.collectAsState()
 
+    LaunchedEffect(true) {
+        viewModel.FilmsRecherche(motcle)
+    }
+
+    LazyVerticalGrid(columns = GridCells.Fixed(2)) {
+        items(movies) { movie ->
+            val imageUrl = "https://image.tmdb.org/t/p/w780${movie.poster_path}"
+
+            FloatingActionButton(
+                onClick = { navController.navigate("FilmDetail/${movie.id}") },
+                modifier = Modifier
+                    .padding(10.dp)
+                    .size(425.dp)
+            ) {
+                Column (
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Image(
+                        painter = rememberAsyncImagePainter(
+                            ImageRequest.Builder(LocalContext.current).data(data = imageUrl)
+                                .apply(block = fun ImageRequest.Builder.() {
+                                    crossfade(true)
+                                    size(450, 500)
+                                }).build()
+                        ),
+                        contentDescription = "Image film",
+                        modifier = Modifier
+                            .padding(start = 5.dp, end = 5.dp)
+                            .width(200.dp)
+                            .height(300.dp)
+                    )
+
+                    Text(
+                        text = movie.original_title,
+                        textAlign = TextAlign.Center,
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold,
+                    )
+                    Spacer(Modifier.size(5.dp))
+                    Text(
+                        text = movie.release_date,
+                        style = MaterialTheme.typography.titleLarge,
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Medium,
+                        fontStyle = FontStyle.Italic,
+                    )
+                    Spacer(Modifier.size(30.dp))
+                }
+            }
+        }
+    }
 }
+
 

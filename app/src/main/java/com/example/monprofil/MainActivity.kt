@@ -42,6 +42,10 @@ class MainActivity : ComponentActivity() {
                         val serieID = backStackEntry.arguments?.getString("serieID")?: ""
                         SerieDetailScreen(navController, windowSizeClass, serieID, viewModel)
                     }
+                    composable("FilmsSearch"){backStackEntry ->
+                        val motcle = backStackEntry.arguments?.getString("moclet")?: ""
+                        FilmsRecherche(navController, windowSizeClass, motcle, viewModel)
+                    }
                 }
              }
             }
