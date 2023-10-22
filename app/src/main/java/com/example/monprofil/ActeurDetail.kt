@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -113,7 +114,7 @@ fun ActeurDetailScreen(
             BottomNavigation(
                 modifier = Modifier.background(color = Color.Red)
             ) {
-                var selectedItem by remember { mutableStateOf(0) }
+                var selectedItem by remember { mutableStateOf(2) }
                 val items = listOf("Films", "Séries", "Acteurs")
                 val icons = listOf(
                     painterResource(id = R.drawable.icon_film),
@@ -147,7 +148,7 @@ fun ActeurDetailScreen(
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun ActeurDetail(navController: NavController,windowClass: WindowSizeClass, acteurID: String, actorViewModel: MainViewModel){
+fun ActeurDetail(navController: NavController,windowClass: WindowSizeClass, acteurID: String, actorViewModel: MainViewModel) {
     val acteur by actorViewModel.acteur.collectAsState()
 
     LaunchedEffect(true) {
@@ -159,9 +160,9 @@ fun ActeurDetail(navController: NavController,windowClass: WindowSizeClass, acte
         horizontalAlignment = CenterHorizontally,
         modifier = Modifier.verticalScroll(rememberScrollState())
     ) {
-        Column(
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = CenterHorizontally,
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             Image(
                 painter = rememberAsyncImagePainter(
@@ -171,49 +172,54 @@ fun ActeurDetail(navController: NavController,windowClass: WindowSizeClass, acte
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .size(200.dp)
-                    .clip(CircleShape)
-                    .height(20.dp)
+                    .padding(start = 25.dp, end = 10.dp, top = 5.dp)
+                    .clip(shape = RoundedCornerShape(16.dp))
             )
-            Text(
-                text = acteur.name,
-                fontWeight = FontWeight.Bold,
-                fontSize = 30.sp,
-                color = Color.Black,
-                textAlign = TextAlign.Center,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-            )
-
-        }
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            modifier = Modifier.padding(top = 15.dp, start = 16.dp, end = 16.dp)
-        ) {
-            val genderText = if (acteur.gender == 1) "Femme" else "Homme"
-            Text(
-                text = "$genderText -",
-                color = Color.Black,
-            )
-
-            if (acteur.known_for_department != "") {
+            Column(
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = CenterHorizontally,
+                modifier = Modifier.padding(top = 15.dp, start = 16.dp, end = 16.dp)
+            ) {
                 Text(
-                    text = "${acteur.known_for_department} -",
+                    text = acteur.name,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 25.sp,
                     color = Color.Black,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                )
+                val genderText = if (acteur.gender == 1) "Femme" else "Homme"
+                Text(
+                    text = "$genderText",
+                    color = Color.Black,
+                    fontSize = 15.sp
+                )
+
+                if (acteur.known_for_department != "") {
+                    Text(
+                        text = "${acteur.known_for_department}",
+                        color = Color.Black,
+                        fontSize = 15.sp
+
+                    )
+                }
+            }
+        }
+        Spacer(Modifier.size(10.dp))
+
+        val isBirthdayValid = acteur.birthday?.matches("^\\d{4}-\\d{2}-\\d{2}\$".toRegex()) == true
+        if (acteur.place_of_birth != "" && isBirthdayValid) {
+            Text(
+                text = "Lieu de naissance : ${acteur.place_of_birth}",
+                fontStyle = FontStyle.Italic,
+                color = Color.Black,
                 )
             }
 
-            val isBirthdayValid =
-                acteur.birthday?.matches("^\\d{4}-\\d{2}-\\d{2}\$".toRegex()) == true
-            if (acteur.place_of_birth != "" && isBirthdayValid) {
-                Text(
-                    text = "${acteur.place_of_birth}",
-                    fontStyle = FontStyle.Italic,
-                    color = Color.Black,
-                )
-            }
-        }
+
+
         Column(
             modifier = Modifier.padding(start = 10.dp),
             horizontalAlignment = CenterHorizontally,

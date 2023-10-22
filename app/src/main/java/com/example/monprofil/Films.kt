@@ -118,7 +118,7 @@ fun FilmsScreen(
                             value = searchText,
                             onValueChange = { searchText = it },
                             modifier = Modifier
-                                .width(350.dp) // Largeur fixe du champ de texte
+                                .width(350.dp)
                                 .padding(end = 16.dp),
                             textStyle = TextStyle(color = Color.White),
                             singleLine = true,
@@ -183,7 +183,7 @@ fun FilmsWeek(navController: NavController, windowClass: WindowSizeClass, viewMo
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
-        // Contenu principal
+
             when (windowClass.widthSizeClass) {
                 WindowWidthSizeClass.Compact -> {
                     val movies by viewModel.movies.collectAsState()

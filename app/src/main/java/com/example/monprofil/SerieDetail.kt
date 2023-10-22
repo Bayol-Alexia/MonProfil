@@ -108,7 +108,7 @@ fun SerieDetailScreen(
             BottomNavigation(
                 modifier = Modifier.background(color = Color.Red)
             ) {
-                var selectedItem by remember { mutableStateOf(0) }
+                var selectedItem by remember { mutableStateOf(1) }
                 val items = listOf("Films", "Séries", "Acteurs")
                 val icons = listOf(
                     painterResource(id = R.drawable.icon_film),
@@ -213,8 +213,7 @@ fun SerieDetail(navController: NavController,windowClass: WindowSizeClass, serie
                 )
             }
         }
-        if (serie.credits.cast.isNotEmpty()) {
-            item {
+        item {
                 Text(
                     text = "Casting",
                     color = Color.Black,
@@ -234,7 +233,7 @@ fun SerieDetail(navController: NavController,windowClass: WindowSizeClass, serie
                                     horizontalAlignment = Alignment.CenterHorizontally
                                 ) {
                                     FloatingActionButton(
-                                        onClick = { navController.navigate("InfosActeurs/${cast.id}") },
+                                        onClick = { navController.navigate("ActeursDetail/${cast.id}") },
                                         modifier = Modifier.size(120.dp).clip(CircleShape),
                                     ) {
                                         Image(
@@ -268,6 +267,6 @@ fun SerieDetail(navController: NavController,windowClass: WindowSizeClass, serie
             }
         }
     }
-}
+
 
 

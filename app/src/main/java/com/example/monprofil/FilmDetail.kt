@@ -225,8 +225,7 @@ fun FilmDetail(navController: NavController,windowClass: WindowSizeClass, movieI
                 )
             }
         }
-        if (movie.credits.cast.isNotEmpty()) {
-            item {
+        item {
                 Text(
                     text = "Casting",
                     color = Color.Black,
@@ -246,7 +245,7 @@ fun FilmDetail(navController: NavController,windowClass: WindowSizeClass, movieI
                                     horizontalAlignment = Alignment.CenterHorizontally
                                 ) {
                                     FloatingActionButton(
-                                        onClick = { navController.navigate("InfosActeurs/${cast.id}") },
+                                        onClick = { navController.navigate("ActeurDetail/${cast.id}") },
                                         modifier = Modifier.size(120.dp).clip(CircleShape),
                                         ) {
                                         Image(
@@ -280,7 +279,7 @@ fun FilmDetail(navController: NavController,windowClass: WindowSizeClass, movieI
             }
         }
     }
-}
+
 
 
 
