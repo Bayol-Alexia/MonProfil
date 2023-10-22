@@ -245,7 +245,7 @@ fun FilmDetail(navController: NavController,windowClass: WindowSizeClass, movieI
                                     horizontalAlignment = Alignment.CenterHorizontally
                                 ) {
                                     FloatingActionButton(
-                                        onClick = { navController.navigate("ActeurDetail/${cast.id}") },
+                                        onClick = { navController.navigate("ActeursDetail/${cast.id}") },
                                         modifier = Modifier.size(120.dp).clip(CircleShape),
                                         ) {
                                         Image(
