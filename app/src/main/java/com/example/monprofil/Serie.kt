@@ -37,6 +37,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -181,47 +182,100 @@ fun SerieWeek(navController: NavController, windowClass: WindowSizeClass,serieVi
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
+        when (windowClass.widthSizeClass) {
+            WindowWidthSizeClass.Compact -> {
                 val series by serieViewModel.series.collectAsState()
-        if (series.isEmpty()){
-            serieViewModel.SeriesWeek()
-        }
-        if (series.isNotEmpty()){
-            LazyVerticalGrid(columns = GridCells.Fixed(2)) {
-                items(series) { serie ->
-                    val imageUrl = "https://image.tmdb.org/t/p/w780${serie.poster_path}"
-                    FloatingActionButton(
-                        onClick = { navController.navigate("SeriesDetail/${serie.id}") },
-                        modifier = Modifier
-                            .padding(10.dp)
-                            .size(350.dp)
-                    ){
-                    Column (
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center
-                    ) {
-                        Image(
-                            painter = rememberAsyncImagePainter(
-                                ImageRequest.Builder(LocalContext.current).data(data = imageUrl)
-                                    .apply(block = fun ImageRequest.Builder.() {
-                                        crossfade(true)
-                                        size(450, 500)
-                                    }).build()
-                            ),
-                            contentDescription = "Image serie",
+                LaunchedEffect(true) {
+                    serieViewModel.SeriesWeek()
+                }
+                LazyVerticalGrid(columns = GridCells.Fixed(2)) {
+                    items(series) { serie ->
+                        val imageUrl = "https://image.tmdb.org/t/p/w780${serie.poster_path}"
+                        FloatingActionButton(
+                            onClick = { navController.navigate("SeriesDetail/${serie.id}") },
                             modifier = Modifier
-                                .padding(start = 5.dp, end = 5.dp)
-                                .width(200.dp)
-                                .height(300.dp)
-                        )
-                        Text(
-                            text = serie.name,
-                            textAlign = TextAlign.Center,
-                            fontSize = 20.sp,
-                            fontWeight = FontWeight.Bold,
-                        )
-                        Spacer(Modifier.size(10.dp))
+                                .padding(10.dp)
+                                .size(350.dp)
+                        ) {
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.Center
+                            ) {
+                                Image(
+                                    painter = rememberAsyncImagePainter(
+                                        ImageRequest.Builder(LocalContext.current)
+                                            .data(data = imageUrl)
+                                            .apply(block = fun ImageRequest.Builder.() {
+                                                crossfade(true)
+                                                size(450, 500)
+                                            }).build()
+                                    ),
+                                    contentDescription = "Image serie",
+                                    modifier = Modifier
+                                        .padding(start = 5.dp, end = 5.dp)
+                                        .width(200.dp)
+                                        .height(300.dp)
+                                )
+                                Text(
+                                    text = serie.name,
+                                    textAlign = TextAlign.Center,
+                                    fontSize = 20.sp,
+                                    fontWeight = FontWeight.Bold,
+                                )
+                                Spacer(Modifier.size(10.dp))
+                            }
+                        }
                     }
-                }}
+                }
+            }
+        }
+    }
+}
+
+
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+@Composable
+fun SerieRecherche(navController: NavController, windowClass: WindowSizeClass, motcle: String, serieViewModel: MainViewModel) {
+    val series by serieViewModel.series.collectAsState ()
+
+    LaunchedEffect(true) {
+        serieViewModel.SeriesRecherche(motcle)
+    }
+    LazyVerticalGrid(columns = GridCells.Fixed(2)) {
+        items(series) { serie ->
+            val imageUrl = "https://image.tmdb.org/t/p/w780${serie.poster_path}"
+            FloatingActionButton(
+                onClick = { navController.navigate("SeriesDetail/${serie.id}") },
+                modifier = Modifier
+                    .padding(10.dp)
+                    .size(350.dp)
+            ){
+                Column (
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Image(
+                        painter = rememberAsyncImagePainter(
+                            ImageRequest.Builder(LocalContext.current).data(data = imageUrl)
+                                .apply(block = fun ImageRequest.Builder.() {
+                                    crossfade(true)
+                                    size(450, 500)
+                                }).build()
+                        ),
+                        contentDescription = "Image serie",
+                        modifier = Modifier
+                            .padding(start = 5.dp, end = 5.dp)
+                            .width(200.dp)
+                            .height(300.dp)
+                    )
+                    Text(
+                        text = serie.name,
+                        textAlign = TextAlign.Center,
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold,
+                    )
+                    Spacer(Modifier.size(10.dp))
+                }
             }
         }
     }

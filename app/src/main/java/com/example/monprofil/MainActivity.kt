@@ -46,6 +46,14 @@ class MainActivity : ComponentActivity() {
                         val motcle = backStackEntry.arguments?.getString("moclet")?: ""
                         FilmsRecherche(navController, windowSizeClass, motcle, viewModel)
                     }
+                    composable("SeriesSearch"){backStackEntry ->
+                        val motcle = backStackEntry.arguments?.getString("moclet")?: ""
+                        SerieRecherche(navController, windowSizeClass, motcle, viewModel)
+                    }
+                    composable("ActeursSearch"){backStackEntry ->
+                        val motcle = backStackEntry.arguments?.getString("moclet")?: ""
+                        ActeurRecherche(navController, windowSizeClass, motcle, viewModel)
+                    }
                 }
              }
             }

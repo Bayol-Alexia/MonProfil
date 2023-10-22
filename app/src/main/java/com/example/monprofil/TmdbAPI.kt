@@ -15,7 +15,7 @@ interface TmdbAPI {
     suspend fun getFilmDetail(@Path("movie_id") movieID: String, @Query("api_key") apikey: String): MoviesInfos
 
     @GET("search/movie")
-    suspend fun getFilmsParMotCle(@Query("api_key") apikey: String, @Query("query") motcle: String) : TmdbResultMotCle
+    suspend fun getFilmsParMotCle(@Query("api_key") apikey: String, @Query("query") motcle: String) : TmdbMovieRechercheResult
 
 
 
@@ -26,6 +26,8 @@ interface TmdbAPI {
     @GET("person/{person_id}?append_to_response=credits")
     suspend fun getActeurDetail(@Path("person_id") acteurID: String, @Query("api_key") apiKey: String) : ActeursInfos
 
+    @GET("search/person")
+    suspend fun getActeurParMotCle(@Query("api_key") apikey: String, @Query("query") motcle: String) : TmdbActeurRechercheResult
 
 
     //Series
@@ -35,4 +37,6 @@ interface TmdbAPI {
     @GET("tv/{serie_id}?append_to_response=credits")
     suspend fun getSerieDetail(@Path("serie_id") serieID: String, @Query("api_key") apikey: String): SeriesInfos
 
+    @GET("search/tv")
+    suspend fun getSerieParMotCle(@Query("api_key") apikey: String, @Query("query") motcle: String) : TmdbSerieRechercheResult
 }

@@ -29,6 +29,17 @@ class MainViewModel(savedStateHandle: SavedStateHandle) : ViewModel() {
             movies.value = service.getFilmsParMotCle(apikey, motcle).results
         }
     }
+    fun SeriesRecherche(motcle: String){
+        viewModelScope.launch {
+            series.value = service.getSerieParMotCle(apikey, motcle).results
+        }
+    }
+    fun ActeursRecherche(motcle: String){
+        viewModelScope.launch {
+            acteurs.value = service.getActeurParMotCle(apikey, motcle).results
+        }
+    }
+
 
     fun FilmsWeek(){
         viewModelScope.launch {
@@ -46,6 +57,8 @@ class MainViewModel(savedStateHandle: SavedStateHandle) : ViewModel() {
             acteurs.value = service.getActorsOfTheWeek(apikey).results
         }
     }
+
+
     fun InfoMovie(movieID: String) {
         viewModelScope.launch {
             movie.value = service.getFilmDetail(movieID, apikey)
