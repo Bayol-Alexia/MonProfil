@@ -7,31 +7,23 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.BottomNavigation
-import androidx.compose.material.TextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -47,17 +39,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -68,10 +56,10 @@ import coil.request.ImageRequest
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FilmDetailScreen(
+fun SerieDetailScreen(
     navController: NavController,
     windowClass: WindowSizeClass,
-    movieID: String,
+    serieID: String,
     viewModel: MainViewModel
 ) {
     Scaffold(
@@ -104,13 +92,13 @@ fun FilmDetailScreen(
                             if (isSearching) {
                                 isSearching = false
                             } else {
-                                navController.navigate("Films")
+                                navController.navigate("Series")
                             }
                         }
                     ) {
                         Icon(
                             imageVector = Icons.Default.ArrowBack,
-                            contentDescription = if (isSearching) "Retour" else "Films"
+                            contentDescription = if (isSearching) "Retour" else "Series"
                         )
                     }
                 },
@@ -148,17 +136,17 @@ fun FilmDetailScreen(
             }
         }
     ) {
-        FilmDetail(navController, windowClass, movieID, viewModel)
+        SerieDetail(navController, windowClass, serieID, viewModel)
     }
 }
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun FilmDetail(navController: NavController,windowClass: WindowSizeClass, movieID: String, viewModel: MainViewModel){
-    val movie by viewModel.movie.collectAsState()
+fun SerieDetail(navController: NavController,windowClass: WindowSizeClass, serieID: String, serieViewModel: MainViewModel){
+    val serie by serieViewModel.serie.collectAsState()
 
     LaunchedEffect(true) {
-        viewModel.InfoMovie(movieID)
+        serieViewModel.InfoSerie(serieID)
     }
 
     LazyColumn {
@@ -170,13 +158,13 @@ fun FilmDetail(navController: NavController,windowClass: WindowSizeClass, movieI
                 Image(
                     painter = rememberAsyncImagePainter(
                         ImageRequest.Builder(LocalContext.current)
-                            .data(data = "https://image.tmdb.org/t/p/w1280${movie.poster_path}")
+                            .data(data = "https://image.tmdb.org/t/p/w1280${serie.poster_path}")
                             .apply(block = fun ImageRequest.Builder.() {
                                 crossfade(true)
                                 size(600, 600)
                             }).build()
                     ),
-                    contentDescription = "Image film ${movie.title}",
+                    contentDescription = "Image film ${serie.original_name}",
                     modifier = Modifier
                         .offset(y = (-30).dp)
                         .padding(start = 25.dp, end = 10.dp, top = 5.dp)
@@ -188,7 +176,7 @@ fun FilmDetail(navController: NavController,windowClass: WindowSizeClass, movieI
                     modifier = Modifier.padding(start = 20.dp, end = 15.dp)
                 ) {
                     Text(
-                        text = movie.title,
+                        text = serie.original_name,
                         textAlign = TextAlign.Center,
                         fontWeight = FontWeight.Bold,
                         fontSize = 30.sp,
@@ -196,7 +184,7 @@ fun FilmDetail(navController: NavController,windowClass: WindowSizeClass, movieI
                         color = Color.Black
                     )
                     Text(
-                        text = getGenres(movie.genres),
+                        text = getGenres(serie.genres),
                         textAlign = TextAlign.Center,
                         fontStyle = FontStyle.Italic,
                         color = Color.Black,
@@ -218,14 +206,14 @@ fun FilmDetail(navController: NavController,windowClass: WindowSizeClass, movieI
                     modifier = Modifier.padding(top = 15.dp, end = 15.dp)
                 )
                 Text(
-                    text = movie.overview,
+                    text = serie.overview,
                     color = Color.Black,
                     textAlign = TextAlign.Justify,
                     modifier = Modifier.padding(top = 15.dp, end = 15.dp),
                 )
             }
         }
-        if (movie.credits.cast.isNotEmpty()) {
+        if (serie.credits.cast.isNotEmpty()) {
             item {
                 Text(
                     text = "Casting",
@@ -238,7 +226,7 @@ fun FilmDetail(navController: NavController,windowClass: WindowSizeClass, movieI
             item {
                 LazyRow(
                     content = {
-                        items(movie.credits.cast.take(10)) { cast ->
+                        items(serie.credits.cast.take(10)) { cast ->
                             Box(
                                 modifier = Modifier.padding(16.dp)
                             ) {
@@ -248,7 +236,7 @@ fun FilmDetail(navController: NavController,windowClass: WindowSizeClass, movieI
                                     FloatingActionButton(
                                         onClick = { navController.navigate("InfosActeurs/${cast.id}") },
                                         modifier = Modifier.size(120.dp).clip(CircleShape),
-                                        ) {
+                                    ) {
                                         Image(
                                             painter = rememberAsyncImagePainter(
                                                 ImageRequest.Builder(
@@ -282,10 +270,4 @@ fun FilmDetail(navController: NavController,windowClass: WindowSizeClass, movieI
     }
 }
 
-
-
-@Composable
-fun getGenres(genres: List<Genre>): String {
-    return genres.joinToString(", ") { it.name }
-}
 

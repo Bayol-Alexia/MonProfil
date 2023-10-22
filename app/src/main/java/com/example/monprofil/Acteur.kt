@@ -192,7 +192,7 @@ fun ActeurWeek(navController: NavController, windowClass: WindowSizeClass,actorV
                 items(acteurs) { actor ->
                     val imageUrl = "https://image.tmdb.org/t/p/w780${actor.profile_path}"
                     FloatingActionButton(
-                        onClick = { navController.navigate("InfosFilms/${actor.id}") },
+                        onClick = { navController.navigate("ActeursDetail/${actor.id}") },
                         modifier = Modifier
                             .padding(10.dp)
                             .size(350.dp)

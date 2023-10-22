@@ -13,10 +13,8 @@ class MainViewModel(savedStateHandle: SavedStateHandle) : ViewModel() {
     val acteurs = MutableStateFlow<List<TmdbActors>>(listOf())
     val series = MutableStateFlow<List<TmdbSeries>>(listOf())
     val movie = MutableStateFlow<MoviesInfos>(MoviesInfos())
-    //val seriesInfos = MutableStateFlow<SeriesInfos>(SeriesInfos())
-    //val acteursInfos = MutableStateFlow<ActeursInfos>(ActeursInfos())
-
-    private val movieID: String? = savedStateHandle["movieID"]
+    val serie = MutableStateFlow<SeriesInfos>(SeriesInfos())
+    val acteur = MutableStateFlow<ActeursInfos>(ActeursInfos())
 
     val apikey = "7745960998b08adddf196d8d124b9ae0"
 
@@ -48,11 +46,21 @@ class MainViewModel(savedStateHandle: SavedStateHandle) : ViewModel() {
             acteurs.value = service.getActorsOfTheWeek(apikey).results
         }
     }
-    fun InfoMovie() {
+    fun InfoMovie(movieID: String) {
         viewModelScope.launch {
-            movie.value = service.getFilmDetail(movieID?:"", apikey)
+            movie.value = service.getFilmDetail(movieID, apikey)
         }
     }
 
+    fun InfoSerie(serieID: String) {
+        viewModelScope.launch {
+            serie.value = service.getSerieDetail(serieID, apikey)
+        }
+    }
 
+    fun InfoActeur(acteurID: String) {
+        viewModelScope.launch {
+            acteur.value = service.getActeurDetail(acteurID, apikey)
+        }
+    }
 }

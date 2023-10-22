@@ -190,7 +190,7 @@ fun SerieWeek(navController: NavController, windowClass: WindowSizeClass,serieVi
                 items(series) { serie ->
                     val imageUrl = "https://image.tmdb.org/t/p/w780${serie.poster_path}"
                     FloatingActionButton(
-                        onClick = { navController.navigate("InfosFilms/${serie.id}") },
+                        onClick = { navController.navigate("SeriesDetail/${serie.id}") },
                         modifier = Modifier
                             .padding(10.dp)
                             .size(350.dp)
