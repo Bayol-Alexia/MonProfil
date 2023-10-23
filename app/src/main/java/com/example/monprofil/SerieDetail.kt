@@ -6,15 +6,18 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.pager.PagerSnapDistance
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.BottomNavigation
@@ -106,7 +109,8 @@ fun SerieDetailScreen(
 
         bottomBar = {
             BottomNavigation(
-                modifier = Modifier.background(color = Color.Red)
+                backgroundColor = Color.Red,
+                modifier = Modifier.height(80.dp)
             ) {
                 var selectedItem by remember { mutableStateOf(1) }
                 val items = listOf("Films", "Séries", "Acteurs")
@@ -124,7 +128,7 @@ fun SerieDetailScreen(
                     }
 
                     NavigationBarItem(
-                        icon = { Image(painter = icons[index], contentDescription = "Icône")},
+                        icon = { Image(painter = icons[index], contentDescription = "Icône", modifier = Modifier.size(30.dp))},
                         label = { Text(item) },
                         selected = selectedItem == index,
                         onClick = {
@@ -136,84 +140,87 @@ fun SerieDetailScreen(
             }
         }
     ) {
-        SerieDetail(navController, windowClass, serieID, viewModel)
+        SerieDetail(navController, windowClass, serieID, viewModel, it)
     }
 }
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun SerieDetail(navController: NavController,windowClass: WindowSizeClass, serieID: String, serieViewModel: MainViewModel){
-    val serie by serieViewModel.serie.collectAsState()
+fun SerieDetail(navController: NavController,windowClass: WindowSizeClass, serieID: String, serieViewModel: MainViewModel, padding: PaddingValues) {
 
-    LaunchedEffect(true) {
-        serieViewModel.InfoSerie(serieID)
-    }
+    Box(
+        modifier = Modifier.fillMaxSize().padding(padding)
+    ) {
+        val serie by serieViewModel.serie.collectAsState()
+        LaunchedEffect(true) {
+            serieViewModel.InfoSerie(serieID)
+        }
 
-    LazyColumn {
-        item {
-            Row(
-                verticalAlignment = Alignment.Top,
-                horizontalArrangement = Arrangement.Center
-            ) {
-                Image(
-                    painter = rememberAsyncImagePainter(
-                        ImageRequest.Builder(LocalContext.current)
-                            .data(data = "https://image.tmdb.org/t/p/w1280${serie.poster_path}")
-                            .apply(block = fun ImageRequest.Builder.() {
-                                crossfade(true)
-                                size(600, 600)
-                            }).build()
-                    ),
-                    contentDescription = "Image film ${serie.original_name}",
-                    modifier = Modifier
-                        .offset(y = (-30).dp)
-                        .padding(start = 25.dp, end = 10.dp, top = 5.dp)
-                        .clip(shape = RoundedCornerShape(16.dp))
-                )
+        LazyColumn {
+            item {
+                Row(
+                    verticalAlignment = Alignment.Top,
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Image(
+                        painter = rememberAsyncImagePainter(
+                            ImageRequest.Builder(LocalContext.current)
+                                .data(data = "https://image.tmdb.org/t/p/w1280${serie.poster_path}")
+                                .apply(block = fun ImageRequest.Builder.() {
+                                    crossfade(true)
+                                    size(600, 600)
+                                }).build()
+                        ),
+                        contentDescription = "Image film ${serie.original_name}",
+                        modifier = Modifier
+                            .offset(y = (-30).dp)
+                            .padding(start = 25.dp, end = 10.dp, top = 5.dp)
+                            .clip(shape = RoundedCornerShape(16.dp))
+                    )
+                    Column(
+                        verticalArrangement = Arrangement.Top,
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier.padding(start = 20.dp, end = 15.dp)
+                    ) {
+                        Text(
+                            text = serie.original_name,
+                            textAlign = TextAlign.Center,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 30.sp,
+                            modifier = Modifier.padding(vertical = 10.dp),
+                            color = Color.Black
+                        )
+                        Text(
+                            text = getGenres(serie.genres),
+                            textAlign = TextAlign.Center,
+                            fontStyle = FontStyle.Italic,
+                            color = Color.Black,
+                            modifier = Modifier.padding(top = 10.dp)
+                        )
+                    }
+                }
+            }
+            item {
                 Column(
-                    verticalArrangement = Arrangement.Top,
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.padding(start = 20.dp, end = 15.dp)
+                    horizontalAlignment = Alignment.Start,
+                    modifier = Modifier.padding(start = 10.dp)
                 ) {
                     Text(
-                        text = serie.original_name,
-                        textAlign = TextAlign.Center,
+                        text = "Synopsis",
+                        color = Color.Black,
                         fontWeight = FontWeight.Bold,
-                        fontSize = 30.sp,
-                        modifier = Modifier.padding(vertical = 10.dp),
-                        color = Color.Black
+                        fontSize = 20.sp,
+                        modifier = Modifier.padding(top = 15.dp, end = 15.dp)
                     )
                     Text(
-                        text = getGenres(serie.genres),
-                        textAlign = TextAlign.Center,
-                        fontStyle = FontStyle.Italic,
+                        text = serie.overview,
                         color = Color.Black,
-                        modifier = Modifier.padding(top = 10.dp)
+                        textAlign = TextAlign.Justify,
+                        modifier = Modifier.padding(top = 15.dp, end = 15.dp),
                     )
                 }
             }
-        }
-        item {
-            Column(
-                horizontalAlignment = Alignment.Start,
-                modifier = Modifier.padding(start = 10.dp)
-            ) {
-                Text(
-                    text = "Synopsis",
-                    color = Color.Black,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 20.sp,
-                    modifier = Modifier.padding(top = 15.dp, end = 15.dp)
-                )
-                Text(
-                    text = serie.overview,
-                    color = Color.Black,
-                    textAlign = TextAlign.Justify,
-                    modifier = Modifier.padding(top = 15.dp, end = 15.dp),
-                )
-            }
-        }
-        item {
+            item {
                 Text(
                     text = "Casting",
                     color = Color.Black,
@@ -267,6 +274,6 @@ fun SerieDetail(navController: NavController,windowClass: WindowSizeClass, serie
             }
         }
     }
-
+}
 
 

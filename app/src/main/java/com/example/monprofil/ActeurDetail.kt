@@ -6,6 +6,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -111,8 +112,10 @@ fun ActeurDetailScreen(
             )},
 
         bottomBar = {
+
             BottomNavigation(
-                modifier = Modifier.background(color = Color.Red)
+                backgroundColor = Color.Red,
+                modifier = Modifier.height(80.dp)
             ) {
                 var selectedItem by remember { mutableStateOf(2) }
                 val items = listOf("Films", "Séries", "Acteurs")
@@ -130,7 +133,7 @@ fun ActeurDetailScreen(
                     }
 
                     NavigationBarItem(
-                        icon = { Image(painter = icons[index], contentDescription = "Icône")},
+                        icon = { Image(painter = icons[index], contentDescription = "Icône", modifier = Modifier.size(30.dp))},
                         label = { Text(item) },
                         selected = selectedItem == index,
                         onClick = {
@@ -142,102 +145,109 @@ fun ActeurDetailScreen(
             }
         }
     ) {
-        ActeurDetail(navController, windowClass, acteurID, viewModel)
+        ActeurDetail(navController, windowClass, acteurID, viewModel, it)
     }
 }
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun ActeurDetail(navController: NavController,windowClass: WindowSizeClass, acteurID: String, actorViewModel: MainViewModel) {
-    val acteur by actorViewModel.acteur.collectAsState()
+fun ActeurDetail(navController: NavController,windowClass: WindowSizeClass, acteurID: String, actorViewModel: MainViewModel, padding:PaddingValues) {
 
-    LaunchedEffect(true) {
-        actorViewModel.InfoActeur(acteurID)
-    }
-
-    Column(
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = CenterHorizontally,
-        modifier = Modifier.verticalScroll(rememberScrollState())
+    Box(
+        modifier = Modifier.fillMaxSize().padding(padding)
     ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-        ) {
-            Image(
-                painter = rememberAsyncImagePainter(
-                    model = "https://image.tmdb.org/t/p/h632${acteur.profile_path}"
-                ),
-                contentDescription = "Image acteur ${acteur.name}",
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .size(200.dp)
-                    .padding(start = 25.dp, end = 10.dp, top = 5.dp)
-                    .clip(shape = RoundedCornerShape(16.dp))
-            )
-            Column(
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = CenterHorizontally,
-                modifier = Modifier.padding(top = 15.dp, start = 16.dp, end = 16.dp)
-            ) {
-                Text(
-                    text = acteur.name,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 25.sp,
-                    color = Color.Black,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp)
-                )
-                val genderText = if (acteur.gender == 1) "Femme" else "Homme"
-                Text(
-                    text = "$genderText",
-                    color = Color.Black,
-                    fontSize = 15.sp
-                )
 
-                if (acteur.known_for_department != "") {
-                    Text(
-                        text = "${acteur.known_for_department}",
-                        color = Color.Black,
-                        fontSize = 15.sp
+        val acteur by actorViewModel.acteur.collectAsState()
 
-                    )
-                }
-            }
+        LaunchedEffect(true) {
+            actorViewModel.InfoActeur(acteurID)
         }
-        Spacer(Modifier.size(10.dp))
-
-        val isBirthdayValid = acteur.birthday?.matches("^\\d{4}-\\d{2}-\\d{2}\$".toRegex()) == true
-        if (acteur.place_of_birth != "" && isBirthdayValid) {
-            Text(
-                text = "Lieu de naissance : ${acteur.place_of_birth}",
-                fontStyle = FontStyle.Italic,
-                color = Color.Black,
-                )
-            }
-
-
 
         Column(
-            modifier = Modifier.padding(start = 10.dp),
+            verticalArrangement = Arrangement.Center,
             horizontalAlignment = CenterHorizontally,
+            modifier = Modifier.verticalScroll(rememberScrollState())
         ) {
-            if (acteur.biography != "") {
-                Text(
-                    text = "Biographie",
-                    color = Color.Black,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 20.sp,
-                    modifier = Modifier.padding(top = 15.dp, start = 15.dp)
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                Image(
+                    painter = rememberAsyncImagePainter(
+                        model = "https://image.tmdb.org/t/p/h632${acteur.profile_path}"
+                    ),
+                    contentDescription = "Image acteur ${acteur.name}",
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .size(200.dp)
+                        .padding(start = 25.dp, end = 10.dp, top = 5.dp)
+                        .clip(shape = RoundedCornerShape(16.dp))
                 )
+                Column(
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = CenterHorizontally,
+                    modifier = Modifier.padding(top = 15.dp, start = 16.dp, end = 16.dp)
+                ) {
+                    Text(
+                        text = acteur.name,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 25.sp,
+                        color = Color.Black,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp)
+                    )
+                    val genderText = if (acteur.gender == 1) "Femme" else "Homme"
+                    Text(
+                        text = "$genderText",
+                        color = Color.Black,
+                        fontSize = 15.sp
+                    )
+
+                    if (acteur.known_for_department != "") {
+                        Text(
+                            text = "${acteur.known_for_department}",
+                            color = Color.Black,
+                            fontSize = 15.sp
+
+                        )
+                    }
+                }
+            }
+            Spacer(Modifier.size(10.dp))
+
+            val isBirthdayValid =
+                acteur.birthday?.matches("^\\d{4}-\\d{2}-\\d{2}\$".toRegex()) == true
+            if (acteur.place_of_birth != "" && isBirthdayValid) {
                 Text(
-                    text = acteur.biography,
+                    text = "Lieu de naissance : ${acteur.place_of_birth}",
+                    fontStyle = FontStyle.Italic,
                     color = Color.Black,
-                    textAlign = TextAlign.Justify,
-                    modifier = Modifier.padding(top = 15.dp, end = 15.dp)
                 )
+            }
+
+
+
+            Column(
+                modifier = Modifier.padding(start = 10.dp),
+                horizontalAlignment = CenterHorizontally,
+            ) {
+                if (acteur.biography != "") {
+                    Text(
+                        text = "Biographie",
+                        color = Color.Black,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 20.sp,
+                        modifier = Modifier.padding(top = 15.dp, start = 15.dp)
+                    )
+                    Text(
+                        text = acteur.biography,
+                        color = Color.Black,
+                        textAlign = TextAlign.Justify,
+                        modifier = Modifier.padding(top = 15.dp, end = 15.dp)
+                    )
+                }
             }
         }
     }

@@ -6,6 +6,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -142,7 +143,8 @@ fun SerieScreen(
 
         bottomBar = {
             BottomNavigation(
-                modifier = Modifier.background(color = Color.Red)
+                backgroundColor = Color.Red,
+                modifier = Modifier.height(80.dp)
             ) {
                 var selectedItem by remember { mutableStateOf(1) }
                 val items = listOf("Films", "Séries", "Acteurs")
@@ -160,7 +162,7 @@ fun SerieScreen(
                     }
 
                     NavigationBarItem(
-                        icon = { Image(painter = icons[index], contentDescription = "Icône")},
+                        icon = { Image(painter = icons[index], contentDescription = "Icône", modifier = Modifier.size(30.dp))},
                         label = { Text(item) },
                         selected = selectedItem == index,
                         onClick = {
@@ -172,15 +174,15 @@ fun SerieScreen(
             }
         }
     ) {
-        SerieWeek(navController, windowClass, viewModel)
+        SerieWeek(navController, windowClass, viewModel,it)
     }
 }
 
 @Composable
-fun SerieWeek(navController: NavController, windowClass: WindowSizeClass,serieViewModel: MainViewModel) {
+fun SerieWeek(navController: NavController, windowClass: WindowSizeClass,serieViewModel: MainViewModel, padding:PaddingValues) {
 
     Box(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize().padding(padding)
     ) {
         when (windowClass.widthSizeClass) {
             WindowWidthSizeClass.Compact -> {

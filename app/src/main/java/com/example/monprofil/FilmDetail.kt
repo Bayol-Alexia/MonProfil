@@ -6,10 +6,12 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -118,7 +120,8 @@ fun FilmDetailScreen(
 
         bottomBar = {
             BottomNavigation(
-                modifier = Modifier.background(color = Color.Red)
+                backgroundColor = Color.Red,
+                modifier = Modifier.height(80.dp)
             ) {
                 var selectedItem by remember { mutableStateOf(0) }
                 val items = listOf("Films", "Séries", "Acteurs")
@@ -136,7 +139,7 @@ fun FilmDetailScreen(
                     }
 
                     NavigationBarItem(
-                        icon = { Image(painter = icons[index], contentDescription = "Icône")},
+                        icon = { Image(painter = icons[index], contentDescription = "Icône", modifier = Modifier.size(30.dp))},
                         label = { Text(item) },
                         selected = selectedItem == index,
                         onClick = {
@@ -148,84 +151,86 @@ fun FilmDetailScreen(
             }
         }
     ) {
-        FilmDetail(navController, windowClass, movieID, viewModel)
+        FilmDetail(navController, windowClass, movieID, viewModel, it)
     }
 }
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun FilmDetail(navController: NavController,windowClass: WindowSizeClass, movieID: String, viewModel: MainViewModel){
+fun FilmDetail(navController: NavController,windowClass: WindowSizeClass, movieID: String, viewModel: MainViewModel, padding: PaddingValues) {
     val movie by viewModel.movie.collectAsState()
+    Box(
+        modifier = Modifier.fillMaxSize().padding(padding)
+    ) {
+        LaunchedEffect(true) {
+            viewModel.InfoMovie(movieID)
+        }
 
-    LaunchedEffect(true) {
-        viewModel.InfoMovie(movieID)
-    }
-
-    LazyColumn {
-        item {
-            Row(
-                verticalAlignment = Alignment.Top,
-                horizontalArrangement = Arrangement.Center
-            ) {
-                Image(
-                    painter = rememberAsyncImagePainter(
-                        ImageRequest.Builder(LocalContext.current)
-                            .data(data = "https://image.tmdb.org/t/p/w1280${movie.poster_path}")
-                            .apply(block = fun ImageRequest.Builder.() {
-                                crossfade(true)
-                                size(600, 600)
-                            }).build()
-                    ),
-                    contentDescription = "Image film ${movie.title}",
-                    modifier = Modifier
-                        .offset(y = (-30).dp)
-                        .padding(start = 25.dp, end = 10.dp, top = 5.dp)
-                        .clip(shape = RoundedCornerShape(16.dp))
-                )
+        LazyColumn {
+            item {
+                Row(
+                    verticalAlignment = Alignment.Top,
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Image(
+                        painter = rememberAsyncImagePainter(
+                            ImageRequest.Builder(LocalContext.current)
+                                .data(data = "https://image.tmdb.org/t/p/w1280${movie.poster_path}")
+                                .apply(block = fun ImageRequest.Builder.() {
+                                    crossfade(true)
+                                    size(600, 600)
+                                }).build()
+                        ),
+                        contentDescription = "Image film ${movie.title}",
+                        modifier = Modifier
+                            .offset(y = (-30).dp)
+                            .padding(start = 25.dp, end = 10.dp, top = 5.dp)
+                            .clip(shape = RoundedCornerShape(16.dp))
+                    )
+                    Column(
+                        verticalArrangement = Arrangement.Top,
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier.padding(start = 20.dp, end = 15.dp)
+                    ) {
+                        Text(
+                            text = movie.title,
+                            textAlign = TextAlign.Center,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 30.sp,
+                            modifier = Modifier.padding(vertical = 10.dp),
+                            color = Color.Black
+                        )
+                        Text(
+                            text = getGenres(movie.genres),
+                            textAlign = TextAlign.Center,
+                            fontStyle = FontStyle.Italic,
+                            color = Color.Black,
+                            modifier = Modifier.padding(top = 10.dp)
+                        )
+                    }
+                }
+            }
+            item {
                 Column(
-                    verticalArrangement = Arrangement.Top,
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.padding(start = 20.dp, end = 15.dp)
+                    horizontalAlignment = Alignment.Start,
+                    modifier = Modifier.padding(start = 10.dp)
                 ) {
                     Text(
-                        text = movie.title,
-                        textAlign = TextAlign.Center,
+                        text = "Synopsis",
+                        color = Color.Black,
                         fontWeight = FontWeight.Bold,
-                        fontSize = 30.sp,
-                        modifier = Modifier.padding(vertical = 10.dp),
-                        color = Color.Black
+                        fontSize = 20.sp,
+                        modifier = Modifier.padding(top = 15.dp, end = 15.dp)
                     )
                     Text(
-                        text = getGenres(movie.genres),
-                        textAlign = TextAlign.Center,
-                        fontStyle = FontStyle.Italic,
+                        text = movie.overview,
                         color = Color.Black,
-                        modifier = Modifier.padding(top = 10.dp)
+                        textAlign = TextAlign.Justify,
+                        modifier = Modifier.padding(top = 15.dp, end = 15.dp),
                     )
                 }
             }
-        }
-        item {
-            Column(
-                horizontalAlignment = Alignment.Start,
-                modifier = Modifier.padding(start = 10.dp)
-            ) {
-                Text(
-                    text = "Synopsis",
-                    color = Color.Black,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 20.sp,
-                    modifier = Modifier.padding(top = 15.dp, end = 15.dp)
-                )
-                Text(
-                    text = movie.overview,
-                    color = Color.Black,
-                    textAlign = TextAlign.Justify,
-                    modifier = Modifier.padding(top = 15.dp, end = 15.dp),
-                )
-            }
-        }
-        item {
+            item {
                 Text(
                     text = "Casting",
                     color = Color.Black,
@@ -247,7 +252,7 @@ fun FilmDetail(navController: NavController,windowClass: WindowSizeClass, movieI
                                     FloatingActionButton(
                                         onClick = { navController.navigate("ActeursDetail/${cast.id}") },
                                         modifier = Modifier.size(120.dp).clip(CircleShape),
-                                        ) {
+                                    ) {
                                         Image(
                                             painter = rememberAsyncImagePainter(
                                                 ImageRequest.Builder(
@@ -279,7 +284,7 @@ fun FilmDetail(navController: NavController,windowClass: WindowSizeClass, movieI
             }
         }
     }
-
+}
 
 
 
