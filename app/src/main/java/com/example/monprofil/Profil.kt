@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
@@ -91,7 +92,7 @@ import androidx.navigation.NavController
                         Image(
                             painterResource(id = R.drawable.alexia_bayol),
                             contentDescription = "C'est Alex",
-                            Modifier.clip(RoundedCornerShape(200.dp)).size(200.dp),
+                            Modifier.clip(CircleShape).size(200.dp),
                         )
                         Text(
                             text = "Alexia Bayol",
