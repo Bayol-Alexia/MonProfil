@@ -151,6 +151,7 @@ fun SerieDetail(navController: NavController,windowClass: WindowSizeClass, serie
     Box(
         modifier = Modifier.fillMaxSize().padding(padding)
     ) {
+
         val serie by serieViewModel.serie.collectAsState()
         LaunchedEffect(true) {
             serieViewModel.InfoSerie(serieID)

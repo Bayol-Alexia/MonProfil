@@ -158,10 +158,11 @@ fun FilmDetailScreen(
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun FilmDetail(navController: NavController,windowClass: WindowSizeClass, movieID: String, viewModel: MainViewModel, padding: PaddingValues) {
-    val movie by viewModel.movie.collectAsState()
+
     Box(
         modifier = Modifier.fillMaxSize().padding(padding)
     ) {
+        val movie by viewModel.movie.collectAsState()
         LaunchedEffect(true) {
             viewModel.InfoMovie(movieID)
         }
