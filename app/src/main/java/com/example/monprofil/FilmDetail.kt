@@ -116,7 +116,8 @@ fun FilmDetailScreen(
                         )
                     }
                 },
-            )},
+            )
+        },
 
         bottomBar = {
             BottomNavigation(
@@ -139,7 +140,13 @@ fun FilmDetailScreen(
                     }
 
                     NavigationBarItem(
-                        icon = { Image(painter = icons[index], contentDescription = "Icône", modifier = Modifier.size(30.dp))},
+                        icon = {
+                            Image(
+                                painter = icons[index],
+                                contentDescription = "Icône",
+                                modifier = Modifier.size(30.dp)
+                            )
+                        },
                         label = { Text(item) },
                         selected = selectedItem == index,
                         onClick = {
@@ -157,10 +164,19 @@ fun FilmDetailScreen(
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun FilmDetail(navController: NavController,windowClass: WindowSizeClass, movieID: String, viewModel: MainViewModel, padding: PaddingValues) {
+fun FilmDetail(
+    navController: NavController,
+    windowClass: WindowSizeClass,
+    movieID: String,
+    viewModel: MainViewModel,
+    padding: PaddingValues
+) {
 
     Box(
-        modifier = Modifier.fillMaxSize().padding(padding).background(Color.Black)
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(padding)
+            .background(Color.Black)
     ) {
         val movie by viewModel.movie.collectAsState()
         LaunchedEffect(true) {
@@ -252,7 +268,9 @@ fun FilmDetail(navController: NavController,windowClass: WindowSizeClass, movieI
                                 ) {
                                     FloatingActionButton(
                                         onClick = { navController.navigate("ActeursDetail/${cast.id}") },
-                                        modifier = Modifier.size(120.dp).clip(CircleShape),
+                                        modifier = Modifier
+                                            .size(120.dp)
+                                            .clip(CircleShape),
                                     ) {
                                         Image(
                                             painter = rememberAsyncImagePainter(
@@ -286,7 +304,6 @@ fun FilmDetail(navController: NavController,windowClass: WindowSizeClass, movieI
         }
     }
 }
-
 
 
 @Composable

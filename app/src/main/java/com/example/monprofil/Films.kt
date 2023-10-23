@@ -83,7 +83,7 @@ fun FilmsScreen(
                     containerColor = Color.Red,
                     titleContentColor = Color.White,
 
-            ),
+                    ),
                 title = {
                     Row(
                         modifier = Modifier
@@ -130,18 +130,22 @@ fun FilmsScreen(
                             ),
                             keyboardActions = KeyboardActions(
                                 onDone = {
-                                        isSearching = false
-                                        viewModel.FilmsRecherche(motcle)
+                                    isSearching = false
+                                    viewModel.FilmsRecherche(motcle)
                                 }
                             )
                         )
                     } else {
                         IconButton(onClick = { isSearching = !isSearching }) {
-                            Icon(imageVector = Icons.Default.Search, contentDescription = "Recherche")
+                            Icon(
+                                imageVector = Icons.Default.Search,
+                                contentDescription = "Recherche"
+                            )
                         }
                     }
                 }
-        )},
+            )
+        },
 
         bottomBar = {
             BottomNavigation(
@@ -164,7 +168,13 @@ fun FilmsScreen(
                     }
 
                     NavigationBarItem(
-                        icon = { Image(painter = icons[index], contentDescription = "Icône", modifier = Modifier.size(30.dp))},
+                        icon = {
+                            Image(
+                                painter = icons[index],
+                                contentDescription = "Icône",
+                                modifier = Modifier.size(30.dp)
+                            )
+                        },
                         label = { Text(item) },
                         selected = selectedItem == index,
                         onClick = {
@@ -176,59 +186,124 @@ fun FilmsScreen(
             }
         }
     ) {
-        FilmsWeek(navController, windowClass, viewModel,it)
+        FilmsWeek(navController, windowClass, viewModel, it)
     }
 }
 
 @Composable
-fun FilmsWeek(navController: NavController, windowClass: WindowSizeClass, viewModel: MainViewModel, padding: PaddingValues) {
+fun FilmsWeek(
+    navController: NavController,
+    windowClass: WindowSizeClass,
+    viewModel: MainViewModel,
+    padding: PaddingValues
+) {
 
     Box(
-        modifier = Modifier.fillMaxSize().padding(padding).background(Color.Black)
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(padding)
+            .background(Color.Black)
     ) {
+        val movies by viewModel.movies.collectAsState()
 
-            when (windowClass.widthSizeClass) {
-                WindowWidthSizeClass.Compact -> {
-                    val movies by viewModel.movies.collectAsState()
+        LaunchedEffect(true) {
+            viewModel.FilmsWeek()
+        }
+        when (windowClass.widthSizeClass) {
+            WindowWidthSizeClass.Compact -> {
 
-                    LaunchedEffect(true) {
-                        viewModel.FilmsWeek()
-                    }
-                    LazyVerticalGrid(columns = GridCells.Fixed(2),/*modifier = Modifier.padding(25.dp)*/) {
-                        items(movies) { movie ->
-                            val imageUrl = "https://image.tmdb.org/t/p/w780${movie.poster_path}"
+                LazyVerticalGrid(columns = GridCells.Fixed(2)/*modifier = Modifier.padding(25.dp)*/) {
+                    items(movies) { movie ->
+                        val imageUrl = "https://image.tmdb.org/t/p/w780${movie.poster_path}"
 
-                            FloatingActionButton(
-                                onClick = { navController.navigate("FilmDetail/${movie.id}") },
-                                modifier = Modifier
-                                    .padding(10.dp)
-                                    .size(425.dp),
-                                containerColor = Color.Black,
-                                contentColor = Color.LightGray
+                        FloatingActionButton(
+                            onClick = { navController.navigate("FilmDetail/${movie.id}") },
+                            modifier = Modifier
+                                .padding(10.dp)
+                                .size(425.dp),
+                            containerColor = Color.Black,
+                            contentColor = Color.LightGray
+                        ) {
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.Center
                             ) {
-                                Column (
+                                Image(
+                                    painter = rememberAsyncImagePainter(
+                                        ImageRequest.Builder(LocalContext.current)
+                                            .data(data = imageUrl)
+                                            .apply(block = fun ImageRequest.Builder.() {
+                                                crossfade(true)
+                                                size(500, 550)
+                                            }).build()
+                                    ),
+                                    contentDescription = "Image film",
+                                    modifier = Modifier
+                                        .width(250.dp)
+                                        .height(305.dp)
+                                )
+
+                                Text(
+                                    text = movie.original_title,
+                                    textAlign = TextAlign.Center,
+                                    fontSize = 20.sp,
+                                    fontWeight = FontWeight.Bold,
+                                )
+                                Spacer(Modifier.size(5.dp))
+                                Text(
+                                    text = movie.release_date,
+                                    style = MaterialTheme.typography.titleLarge,
+                                    fontSize = 14.sp,
+                                    fontWeight = FontWeight.Medium,
+                                    fontStyle = FontStyle.Italic,
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+
+            else -> {
+
+                LazyVerticalGrid(columns = GridCells.Fixed(5)) {
+                    items(movies) { movie ->
+                        val imageUrl = "https://image.tmdb.org/t/p/w780${movie.poster_path}"
+
+                        FloatingActionButton(
+                            onClick = { navController.navigate("FilmDetail/${movie.id}") },
+                            modifier = Modifier
+                                .padding(10.dp)
+                                .size(250.dp),
+                            containerColor = Color.Black,
+                            contentColor = Color.LightGray
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.Top,
+                                horizontalArrangement = Arrangement.Center
+                            ) {
+                                Column(
                                     horizontalAlignment = Alignment.CenterHorizontally,
                                     verticalArrangement = Arrangement.Center
                                 ) {
                                     Image(
                                         painter = rememberAsyncImagePainter(
-                                            ImageRequest.Builder(LocalContext.current).data(data = imageUrl)
+                                            ImageRequest.Builder(LocalContext.current)
+                                                .data(data = imageUrl)
                                                 .apply(block = fun ImageRequest.Builder.() {
                                                     crossfade(true)
-                                                    size(450, 500)
+                                                    size(500, 550)
                                                 }).build()
                                         ),
                                         contentDescription = "Image film",
                                         modifier = Modifier
-                                            .padding(start = 5.dp, end = 5.dp)
-                                            .width(200.dp)
-                                            .height(300.dp)
+                                            .width(100.dp)
+                                            .height(150.dp)
                                     )
 
                                     Text(
                                         text = movie.original_title,
                                         textAlign = TextAlign.Center,
-                                        fontSize = 20.sp,
+                                        fontSize = 15.sp,
                                         fontWeight = FontWeight.Bold,
                                     )
                                     Spacer(Modifier.size(5.dp))
@@ -239,15 +314,15 @@ fun FilmsWeek(navController: NavController, windowClass: WindowSizeClass, viewMo
                                         fontWeight = FontWeight.Medium,
                                         fontStyle = FontStyle.Italic,
                                     )
-                                    Spacer(Modifier.size(30.dp))
                                 }
-                            }
                             }
                         }
                     }
                 }
             }
+        }
     }
+}
 
 
 

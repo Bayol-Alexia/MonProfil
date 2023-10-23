@@ -29,32 +29,107 @@ import androidx.navigation.NavController
 
 
 @Composable
-    fun Profil(navController: NavController, windowClass: WindowSizeClass) {
-        when (windowClass.widthSizeClass) {
-            WindowWidthSizeClass.Compact -> {
-                Column(horizontalAlignment = Alignment.CenterHorizontally,modifier= Modifier.fillMaxSize().background(Color.Black)) {
-                    Spacer(Modifier.size(35.dp))
+fun Profil(navController: NavController, windowClass: WindowSizeClass) {
+    when (windowClass.widthSizeClass) {
+        WindowWidthSizeClass.Compact -> {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.Black)
+            ) {
+                Spacer(Modifier.size(35.dp))
+                Image(
+                    painterResource(id = R.drawable.alexia_bayol),
+                    contentDescription = "C'est Alex",
+                    Modifier
+                        .clip(CircleShape)
+                        .size(200.dp),
+                )
+                Spacer(Modifier.size(25.dp))
+                Text(
+                    text = "Alexia Bayol",
+                    fontSize = 50.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Red
+                )
+                Spacer(Modifier.size(15.dp))
+                Text(
+                    text = "Elève ingénieur ISIS en FIE4",
+                    fontSize = 30.sp,
+                    fontStyle = FontStyle.Italic,
+                    color = Color.White
+                )
+                Spacer(Modifier.size(60.dp))
+                Row() {
+                    Image(
+                        painterResource(id = R.drawable.mail),
+                        contentDescription = "C'est le mail",
+                        Modifier.size(30.dp)
+                    )
+                    Text(
+                        text = "  alexia.bayol@etud.univ-jfc.fr",
+                        fontSize = 25.sp,
+                        color = Color.White
+                    )
+                    Spacer(Modifier.size(50.dp))
+                }
+                Row() {
+                    Image(
+                        painterResource(id = R.drawable.instagram),
+                        contentDescription = "C'est l'insta",
+                        Modifier.size(30.dp)
+                    )
+                    Text(
+                        text = "  alexiabyl",
+                        fontSize = 25.sp,
+                        color = Color.White
+                    )
+                    Spacer(Modifier.size(70.dp))
+                }
+                Button(
+                    onClick = { navController.navigate("Films") },
+                    colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
+                )
+                {
+                    Text(
+                        text = "Démarrer",
+                        color = Color.White
+                    )
+                }
+            }
+
+        }
+
+        else -> {
+            Row(modifier = Modifier
+                .background(Color.Black)
+                .fillMaxSize()) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Image(
                         painterResource(id = R.drawable.alexia_bayol),
                         contentDescription = "C'est Alex",
-                        Modifier.clip(CircleShape).size(200.dp),
+                        Modifier.clip(CircleShape),
                     )
-                    Spacer(Modifier.size(25.dp))
                     Text(
                         text = "Alexia Bayol",
-                        fontSize = 50.sp,
+                        fontSize = 60.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color.Red
                     )
-                    Spacer(Modifier.size(40.dp))
+                    Spacer(Modifier.size(15.dp))
                     Text(
                         text = "Elève ingénieur ISIS en FIE4",
                         fontSize = 30.sp,
+                        color = Color.White,
                         fontStyle = FontStyle.Italic,
-                        color = Color.White
+                        fontWeight = FontWeight.Bold,
                     )
-                    Spacer(Modifier.size(60.dp))
+                }
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Spacer(Modifier.size(100.dp))
                     Row() {
+
                         Image(
                             painterResource(id = R.drawable.mail),
                             contentDescription = "C'est le mail",
@@ -80,78 +155,17 @@ import androidx.navigation.NavController
                         )
                         Spacer(Modifier.size(70.dp))
                     }
-                    Button(onClick = { navController.navigate("Films")},colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
-                    )
-                        {
+                    Button(
+                        onClick = { navController.navigate("Films") },
+                        colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
+                    ) {
                         Text(
                             text = "Démarrer",
-                            color = Color.White
                         )
-                    }
-                }
-
-            }
-
-            else -> {
-                Row(modifier = Modifier.background(Color.Black).fillMaxSize()) {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally, ) {
-                        Image(
-                            painterResource(id = R.drawable.alexia_bayol),
-                            contentDescription = "C'est Alex",
-                            Modifier.clip(CircleShape).size(200.dp),
-                        )
-                        Text(
-                            text = "Alexia Bayol",
-                            fontSize = 60.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = Color.Red
-                        )
-                        Spacer(Modifier.size(15.dp))
-                        Text(
-                            text = "Elève ingénieur ISIS en FIE4",
-                            fontSize = 30.sp,
-                            color = Color.White,
-                            fontStyle = FontStyle.Italic,
-                            fontWeight = FontWeight.Bold,
-                            )
-                    }
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Spacer(Modifier.size(100.dp))
-                        Row() {
-
-                            Image(
-                                painterResource(id = R.drawable.mail),
-                                contentDescription = "C'est le mail",
-                                Modifier.size(30.dp).padding(10.dp)
-                            )
-                            Text(
-                                text = "alexia.bayol@etud.univ-jfc.fr",
-                                fontSize = 25.sp,
-                                color = Color.White
-                            )
-                            Spacer(Modifier.size(50.dp))
-                        }
-                        Row() {
-                            Image(
-                                painterResource(id = R.drawable.instagram),
-                                contentDescription = "C'est l'insta",
-                                Modifier.size(30.dp)
-                            )
-                            Text(
-                                text = "alexiabyl",
-                                fontSize = 25.sp,
-                                color = Color.White
-                            )
-                            Spacer(Modifier.size(70.dp))
-                        }
-                        Button(onClick = { navController.navigate("Films")}, colors = ButtonDefaults.buttonColors(containerColor = Color.Red)) {
-                            Text(
-                                text = "Démarrer",
-                            )
-                        }
                     }
                 }
             }
         }
     }
+}
 

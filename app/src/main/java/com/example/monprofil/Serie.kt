@@ -134,7 +134,10 @@ fun SerieScreen(
                         )
                     } else {
                         IconButton(onClick = { isSearching = !isSearching }) {
-                            Icon(imageVector = Icons.Default.Search, contentDescription = "Recherche")
+                            Icon(
+                                imageVector = Icons.Default.Search,
+                                contentDescription = "Recherche"
+                            )
                         }
                     }
                 }
@@ -162,7 +165,13 @@ fun SerieScreen(
                     }
 
                     NavigationBarItem(
-                        icon = { Image(painter = icons[index], contentDescription = "Icône", modifier = Modifier.size(30.dp))},
+                        icon = {
+                            Image(
+                                painter = icons[index],
+                                contentDescription = "Icône",
+                                modifier = Modifier.size(30.dp)
+                            )
+                        },
                         label = { Text(item) },
                         selected = selectedItem == index,
                         onClick = {
@@ -174,22 +183,34 @@ fun SerieScreen(
             }
         }
     ) {
-        SerieWeek(navController, windowClass, viewModel,it)
+        SerieWeek(navController, windowClass, viewModel, it)
     }
 }
 
 @Composable
-fun SerieWeek(navController: NavController, windowClass: WindowSizeClass,serieViewModel: MainViewModel, padding:PaddingValues) {
+fun SerieWeek(
+    navController: NavController,
+    windowClass: WindowSizeClass,
+    serieViewModel: MainViewModel,
+    padding: PaddingValues
+) {
 
     Box(
-        modifier = Modifier.fillMaxSize().padding(padding).background(Color.Black)
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(padding)
+            .background(Color.Black)
     ) {
+
+        val series by serieViewModel.series.collectAsState()
+
+        LaunchedEffect(true) {
+            serieViewModel.SeriesWeek()
+        }
+
         when (windowClass.widthSizeClass) {
             WindowWidthSizeClass.Compact -> {
-                val series by serieViewModel.series.collectAsState()
-                LaunchedEffect(true) {
-                    serieViewModel.SeriesWeek()
-                }
+
                 LazyVerticalGrid(columns = GridCells.Fixed(2)) {
                     items(series) { serie ->
                         val imageUrl = "https://image.tmdb.org/t/p/w780${serie.poster_path}"
@@ -216,9 +237,8 @@ fun SerieWeek(navController: NavController, windowClass: WindowSizeClass,serieVi
                                     ),
                                     contentDescription = "Image serie",
                                     modifier = Modifier
-                                        .padding(start = 5.dp, end = 5.dp)
-                                        .width(200.dp)
-                                        .height(300.dp)
+                                        .width(250.dp)
+                                        .height(305.dp)
                                 )
                                 Text(
                                     text = serie.name,
@@ -226,7 +246,54 @@ fun SerieWeek(navController: NavController, windowClass: WindowSizeClass,serieVi
                                     fontSize = 20.sp,
                                     fontWeight = FontWeight.Bold,
                                 )
-                                Spacer(Modifier.size(10.dp))
+                            }
+                        }
+                    }
+                }
+            }
+
+            else -> {
+                LazyVerticalGrid(columns = GridCells.Fixed(5)) {
+                    items(series) { serie ->
+                        val imageUrl = "https://image.tmdb.org/t/p/w780${serie.poster_path}"
+                        FloatingActionButton(
+                            onClick = { navController.navigate("SeriesDetail/${serie.id}") },
+                            modifier = Modifier
+                                .padding(10.dp)
+                                .size(250.dp),
+                            containerColor = Color.Black,
+                            contentColor = Color.LightGray
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.Top,
+                                horizontalArrangement = Arrangement.Center
+                            ) {
+                                Column(
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                    verticalArrangement = Arrangement.Center
+                                ) {
+                                    Image(
+                                        painter = rememberAsyncImagePainter(
+                                            ImageRequest.Builder(LocalContext.current)
+                                                .data(data = imageUrl)
+                                                .apply(block = fun ImageRequest.Builder.() {
+                                                    crossfade(true)
+                                                    size(450, 500)
+                                                }).build()
+                                        ),
+                                        contentDescription = "Image serie",
+                                        modifier = Modifier
+                                            .width(100.dp)
+                                            .height(150.dp)
+                                    )
+                                    Spacer(Modifier.size(10.dp))
+                                    Text(
+                                        text = serie.name,
+                                        textAlign = TextAlign.Center,
+                                        fontSize = 15.sp,
+                                        fontWeight = FontWeight.Bold,
+                                    )
+                                }
                             }
                         }
                     }

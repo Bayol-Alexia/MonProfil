@@ -69,53 +69,50 @@ fun ActeurDetailScreen(
     acteurID: String,
     viewModel: MainViewModel
 ) {
-    Scaffold(
-        topBar = {
-            var isSearching by remember { mutableStateOf(false) }
+    Scaffold(topBar = {
+        var isSearching by remember { mutableStateOf(false) }
 
-            TopAppBar(
+        TopAppBar(
 
-                colors = TopAppBarDefaults.mediumTopAppBarColors(
-                    containerColor = Color.Red,
-                    titleContentColor = Color.White,
+            colors = TopAppBarDefaults.mediumTopAppBarColors(
+                containerColor = Color.Red,
+                titleContentColor = Color.White,
 
-                    ),
-                title = {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(start = 16.dp),
-                        horizontalArrangement = Arrangement.Center
-                    ) {
-                        Text(
-                            text = if (isSearching) "Recherche" else "CineStream",
-                            modifier = Modifier.align(Alignment.CenterVertically)
-                        )
+                ),
+            title = {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 16.dp),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Text(
+                        text = if (isSearching) "Recherche" else "CineStream",
+                        modifier = Modifier.align(Alignment.CenterVertically)
+                    )
+                }
+            },
+            navigationIcon = {
+                IconButton(onClick = {
+                    if (isSearching) {
+                        isSearching = false
+                    } else {
+                        navController.navigate("Acteurs")
                     }
-                },
-                navigationIcon = {
-                    IconButton(
-                        onClick = {
-                            if (isSearching) {
-                                isSearching = false
-                            } else {
-                                navController.navigate("Acteurs")
-                            }
-                        }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.ArrowBack,
-                            contentDescription = if (isSearching) "Retour" else "Acteurs"
-                        )
-                    }
-                },
-            )},
+                }) {
+                    Icon(
+                        imageVector = Icons.Default.ArrowBack,
+                        contentDescription = if (isSearching) "Retour" else "Acteurs"
+                    )
+                }
+            },
+        )
+    },
 
         bottomBar = {
 
             BottomNavigation(
-                backgroundColor = Color.Red,
-                modifier = Modifier.height(80.dp)
+                backgroundColor = Color.Red, modifier = Modifier.height(80.dp)
             ) {
                 var selectedItem by remember { mutableStateOf(2) }
                 val items = listOf("Films", "Séries", "Acteurs")
@@ -132,29 +129,38 @@ fun ActeurDetailScreen(
                         else -> "fallback_destination"
                     }
 
-                    NavigationBarItem(
-                        icon = { Image(painter = icons[index], contentDescription = "Icône", modifier = Modifier.size(30.dp))},
-                        label = { Text(item) },
-                        selected = selectedItem == index,
-                        onClick = {
-                            selectedItem = index
-                            navController.navigate(route = destination)
-                        }
-                    )
+                    NavigationBarItem(icon = {
+                        Image(
+                            painter = icons[index],
+                            contentDescription = "Icône",
+                            modifier = Modifier.size(30.dp)
+                        )
+                    }, label = { Text(item) }, selected = selectedItem == index, onClick = {
+                        selectedItem = index
+                        navController.navigate(route = destination)
+                    })
                 }
             }
-        }
-    ) {
+        }) {
         ActeurDetail(navController, windowClass, acteurID, viewModel, it)
     }
 }
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun ActeurDetail(navController: NavController,windowClass: WindowSizeClass, acteurID: String, actorViewModel: MainViewModel, padding:PaddingValues) {
+fun ActeurDetail(
+    navController: NavController,
+    windowClass: WindowSizeClass,
+    acteurID: String,
+    actorViewModel: MainViewModel,
+    padding: PaddingValues
+) {
 
     Box(
-        modifier = Modifier.fillMaxSize().padding(padding).background(Color.Black)
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(padding)
+            .background(Color.Black)
     ) {
 
         val acteur by actorViewModel.acteur.collectAsState()
@@ -200,9 +206,7 @@ fun ActeurDetail(navController: NavController,windowClass: WindowSizeClass, acte
                     )
                     val genderText = if (acteur.gender == 1) "Femme" else "Homme"
                     Text(
-                        text = "$genderText",
-                        color = Color.White,
-                        fontSize = 15.sp
+                        text = "$genderText", color = Color.White, fontSize = 15.sp
                     )
 
                     if (acteur.known_for_department != "") {

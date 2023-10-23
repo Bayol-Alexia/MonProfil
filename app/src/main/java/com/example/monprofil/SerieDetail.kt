@@ -105,7 +105,8 @@ fun SerieDetailScreen(
                         )
                     }
                 },
-            )},
+            )
+        },
 
         bottomBar = {
             BottomNavigation(
@@ -128,7 +129,13 @@ fun SerieDetailScreen(
                     }
 
                     NavigationBarItem(
-                        icon = { Image(painter = icons[index], contentDescription = "Icône", modifier = Modifier.size(30.dp))},
+                        icon = {
+                            Image(
+                                painter = icons[index],
+                                contentDescription = "Icône",
+                                modifier = Modifier.size(30.dp)
+                            )
+                        },
                         label = { Text(item) },
                         selected = selectedItem == index,
                         onClick = {
@@ -146,10 +153,19 @@ fun SerieDetailScreen(
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun SerieDetail(navController: NavController,windowClass: WindowSizeClass, serieID: String, serieViewModel: MainViewModel, padding: PaddingValues) {
+fun SerieDetail(
+    navController: NavController,
+    windowClass: WindowSizeClass,
+    serieID: String,
+    serieViewModel: MainViewModel,
+    padding: PaddingValues
+) {
 
     Box(
-        modifier = Modifier.fillMaxSize().padding(padding).background(Color.Black)
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(padding)
+            .background(Color.Black)
     ) {
 
         val serie by serieViewModel.serie.collectAsState()
@@ -242,7 +258,9 @@ fun SerieDetail(navController: NavController,windowClass: WindowSizeClass, serie
                                 ) {
                                     FloatingActionButton(
                                         onClick = { navController.navigate("ActeursDetail/${cast.id}") },
-                                        modifier = Modifier.size(120.dp).clip(CircleShape),
+                                        modifier = Modifier
+                                            .size(120.dp)
+                                            .clip(CircleShape),
                                     ) {
                                         Image(
                                             painter = rememberAsyncImagePainter(
