@@ -28,32 +28,27 @@ class MainActivity : ComponentActivity() {
                 NavHost(navController = navController, startDestination = "Profil") {
                     composable("Profil") { Profil(navController, windowSizeClass) }
                     composable("Films") { FilmsScreen(navController, windowSizeClass, viewModel) }
-                    composable("Acteurs") { ActeurScreen(navController, windowSizeClass, viewModel) }
+                    composable("Acteurs") {
+                        ActeurScreen(
+                            navController,
+                            windowSizeClass,
+                            viewModel
+                        )
+                    }
                     composable("Series") { SerieScreen(navController, windowSizeClass, viewModel) }
                     composable("FilmDetail/{movieID}") { backStackEntry ->
-                        val movieID = backStackEntry.arguments?.getString("movieID")?: ""
-                        FilmDetailScreen(navController,windowSizeClass, movieID, viewModel)
+                        val movieID = backStackEntry.arguments?.getString("movieID") ?: ""
+                        FilmDetailScreen(navController, windowSizeClass, movieID, viewModel)
                     }
                     composable("ActeursDetail/{acteurID}") { backStackEntry ->
-                        val acteurID = backStackEntry.arguments?.getString("acteurID")?: ""
+                        val acteurID = backStackEntry.arguments?.getString("acteurID") ?: ""
                         ActeurDetailScreen(navController, windowSizeClass, acteurID, viewModel)
                     }
                     composable("SeriesDetail/{serieID}") { backStackEntry ->
-                        val serieID = backStackEntry.arguments?.getString("serieID")?: ""
+                        val serieID = backStackEntry.arguments?.getString("serieID") ?: ""
                         SerieDetailScreen(navController, windowSizeClass, serieID, viewModel)
                     }
-                    composable("FilmsSearch"){backStackEntry ->
-                        val motcle = backStackEntry.arguments?.getString("moclet")?: ""
-                        FilmsRecherche(navController, windowSizeClass, motcle, viewModel)
-                    }
-                    composable("SeriesSearch"){backStackEntry ->
-                        val motcle = backStackEntry.arguments?.getString("moclet")?: ""
-                        SerieRecherche(navController, windowSizeClass, motcle, viewModel)
-                    }
-                    composable("ActeursSearch"){backStackEntry ->
-                        val motcle = backStackEntry.arguments?.getString("moclet")?: ""
-                        ActeurRecherche(navController, windowSizeClass, motcle, viewModel)
-                    }
+
                 }
              }
             }

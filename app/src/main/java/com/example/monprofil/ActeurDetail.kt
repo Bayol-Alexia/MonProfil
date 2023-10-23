@@ -154,7 +154,7 @@ fun ActeurDetailScreen(
 fun ActeurDetail(navController: NavController,windowClass: WindowSizeClass, acteurID: String, actorViewModel: MainViewModel, padding:PaddingValues) {
 
     Box(
-        modifier = Modifier.fillMaxSize().padding(padding)
+        modifier = Modifier.fillMaxSize().padding(padding).background(Color.Black)
     ) {
 
         val acteur by actorViewModel.acteur.collectAsState()
@@ -192,7 +192,7 @@ fun ActeurDetail(navController: NavController,windowClass: WindowSizeClass, acte
                         text = acteur.name,
                         fontWeight = FontWeight.Bold,
                         fontSize = 25.sp,
-                        color = Color.Black,
+                        color = Color.Red,
                         textAlign = TextAlign.Center,
                         modifier = Modifier
                             .fillMaxWidth()
@@ -201,14 +201,14 @@ fun ActeurDetail(navController: NavController,windowClass: WindowSizeClass, acte
                     val genderText = if (acteur.gender == 1) "Femme" else "Homme"
                     Text(
                         text = "$genderText",
-                        color = Color.Black,
+                        color = Color.White,
                         fontSize = 15.sp
                     )
 
                     if (acteur.known_for_department != "") {
                         Text(
                             text = "${acteur.known_for_department}",
-                            color = Color.Black,
+                            color = Color.White,
                             fontSize = 15.sp
 
                         )
@@ -223,7 +223,7 @@ fun ActeurDetail(navController: NavController,windowClass: WindowSizeClass, acte
                 Text(
                     text = "Lieu de naissance : ${acteur.place_of_birth}",
                     fontStyle = FontStyle.Italic,
-                    color = Color.Black,
+                    color = Color.White,
                 )
             }
 
@@ -236,14 +236,14 @@ fun ActeurDetail(navController: NavController,windowClass: WindowSizeClass, acte
                 if (acteur.biography != "") {
                     Text(
                         text = "Biographie",
-                        color = Color.Black,
+                        color = Color.Red,
                         fontWeight = FontWeight.Bold,
                         fontSize = 20.sp,
                         modifier = Modifier.padding(top = 15.dp, start = 15.dp)
                     )
                     Text(
                         text = acteur.biography,
-                        color = Color.Black,
+                        color = Color.White,
                         textAlign = TextAlign.Justify,
                         modifier = Modifier.padding(top = 15.dp, end = 15.dp)
                     )

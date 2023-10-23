@@ -160,7 +160,7 @@ fun FilmDetailScreen(
 fun FilmDetail(navController: NavController,windowClass: WindowSizeClass, movieID: String, viewModel: MainViewModel, padding: PaddingValues) {
 
     Box(
-        modifier = Modifier.fillMaxSize().padding(padding)
+        modifier = Modifier.fillMaxSize().padding(padding).background(Color.Black)
     ) {
         val movie by viewModel.movie.collectAsState()
         LaunchedEffect(true) {
@@ -199,13 +199,13 @@ fun FilmDetail(navController: NavController,windowClass: WindowSizeClass, movieI
                             fontWeight = FontWeight.Bold,
                             fontSize = 30.sp,
                             modifier = Modifier.padding(vertical = 10.dp),
-                            color = Color.Black
+                            color = Color.White
                         )
                         Text(
                             text = getGenres(movie.genres),
                             textAlign = TextAlign.Center,
                             fontStyle = FontStyle.Italic,
-                            color = Color.Black,
+                            color = Color.White,
                             modifier = Modifier.padding(top = 10.dp)
                         )
                     }
@@ -218,14 +218,14 @@ fun FilmDetail(navController: NavController,windowClass: WindowSizeClass, movieI
                 ) {
                     Text(
                         text = "Synopsis",
-                        color = Color.Black,
+                        color = Color.Red,
                         fontWeight = FontWeight.Bold,
                         fontSize = 20.sp,
                         modifier = Modifier.padding(top = 15.dp, end = 15.dp)
                     )
                     Text(
                         text = movie.overview,
-                        color = Color.Black,
+                        color = Color.White,
                         textAlign = TextAlign.Justify,
                         modifier = Modifier.padding(top = 15.dp, end = 15.dp),
                     )
@@ -234,7 +234,7 @@ fun FilmDetail(navController: NavController,windowClass: WindowSizeClass, movieI
             item {
                 Text(
                     text = "Casting",
-                    color = Color.Black,
+                    color = Color.Red,
                     fontWeight = FontWeight.Bold,
                     fontSize = 20.sp,
                     modifier = Modifier.padding(top = 15.dp, start = 10.dp)
@@ -273,7 +273,7 @@ fun FilmDetail(navController: NavController,windowClass: WindowSizeClass, movieI
                                     Text(
                                         text = cast.name,
                                         fontWeight = FontWeight.Bold,
-                                        color = Color.Black,
+                                        color = Color.White,
                                         fontSize = 15.sp,
                                         modifier = Modifier.padding(top = 8.dp)
                                     )

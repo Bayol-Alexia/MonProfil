@@ -72,7 +72,7 @@ fun SerieScreen(
     Scaffold(
         topBar = {
             var isSearching by remember { mutableStateOf(false) }
-            var searchText by remember { mutableStateOf("") }
+            var motcle by remember { mutableStateOf("") }
 
             TopAppBar(
 
@@ -114,8 +114,8 @@ fun SerieScreen(
                     Spacer(modifier = Modifier.width(16.dp))
                     if (isSearching) {
                         TextField(
-                            value = searchText,
-                            onValueChange = { searchText = it },
+                            value = motcle,
+                            onValueChange = { motcle = it },
                             modifier = Modifier
                                 .width(350.dp) // Largeur fixe du champ de texte
                                 .padding(end = 16.dp),
@@ -127,8 +127,8 @@ fun SerieScreen(
                             ),
                             keyboardActions = KeyboardActions(
                                 onDone = {
-                                    //FilmsMotCle(navController, windowClass, viewModel)
                                     isSearching = false
+                                    viewModel.SeriesRecherche(motcle)
                                 }
                             )
                         )
@@ -182,7 +182,7 @@ fun SerieScreen(
 fun SerieWeek(navController: NavController, windowClass: WindowSizeClass,serieViewModel: MainViewModel, padding:PaddingValues) {
 
     Box(
-        modifier = Modifier.fillMaxSize().padding(padding)
+        modifier = Modifier.fillMaxSize().padding(padding).background(Color.Black)
     ) {
         when (windowClass.widthSizeClass) {
             WindowWidthSizeClass.Compact -> {
@@ -197,7 +197,9 @@ fun SerieWeek(navController: NavController, windowClass: WindowSizeClass,serieVi
                             onClick = { navController.navigate("SeriesDetail/${serie.id}") },
                             modifier = Modifier
                                 .padding(10.dp)
-                                .size(350.dp)
+                                .size(350.dp),
+                            containerColor = Color.Black,
+                            contentColor = Color.LightGray
                         ) {
                             Column(
                                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -228,55 +230,6 @@ fun SerieWeek(navController: NavController, windowClass: WindowSizeClass,serieVi
                             }
                         }
                     }
-                }
-            }
-        }
-    }
-}
-
-
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@Composable
-fun SerieRecherche(navController: NavController, windowClass: WindowSizeClass, motcle: String, serieViewModel: MainViewModel) {
-    val series by serieViewModel.series.collectAsState ()
-
-    LaunchedEffect(true) {
-        serieViewModel.SeriesRecherche(motcle)
-    }
-    LazyVerticalGrid(columns = GridCells.Fixed(2)) {
-        items(series) { serie ->
-            val imageUrl = "https://image.tmdb.org/t/p/w780${serie.poster_path}"
-            FloatingActionButton(
-                onClick = { navController.navigate("SeriesDetail/${serie.id}") },
-                modifier = Modifier
-                    .padding(10.dp)
-                    .size(350.dp)
-            ){
-                Column (
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
-                ) {
-                    Image(
-                        painter = rememberAsyncImagePainter(
-                            ImageRequest.Builder(LocalContext.current).data(data = imageUrl)
-                                .apply(block = fun ImageRequest.Builder.() {
-                                    crossfade(true)
-                                    size(450, 500)
-                                }).build()
-                        ),
-                        contentDescription = "Image serie",
-                        modifier = Modifier
-                            .padding(start = 5.dp, end = 5.dp)
-                            .width(200.dp)
-                            .height(300.dp)
-                    )
-                    Text(
-                        text = serie.name,
-                        textAlign = TextAlign.Center,
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Bold,
-                    )
-                    Spacer(Modifier.size(10.dp))
                 }
             }
         }
