@@ -9,8 +9,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
@@ -20,10 +21,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+
 
 @Composable
     fun Profil(navController: NavController, windowClass: WindowSizeClass) {
@@ -34,7 +37,7 @@ import androidx.navigation.NavController
                     Image(
                         painterResource(id = R.drawable.alexia_bayol),
                         contentDescription = "C'est Alex",
-                        Modifier.clip(RoundedCornerShape(200.dp)).size(200.dp),
+                        Modifier.clip(CircleShape).size(200.dp),
                     )
                     Spacer(Modifier.size(25.dp))
                     Text(
@@ -46,10 +49,11 @@ import androidx.navigation.NavController
                     Spacer(Modifier.size(40.dp))
                     Text(
                         text = "Elève ingénieur ISIS en FIE4",
-                        fontSize = 25.sp,
+                        fontSize = 30.sp,
+                        fontStyle = FontStyle.Italic,
                         color = Color.White
                     )
-                    Spacer(Modifier.size(40.dp))
+                    Spacer(Modifier.size(60.dp))
                     Row() {
                         Image(
                             painterResource(id = R.drawable.mail),
@@ -57,8 +61,8 @@ import androidx.navigation.NavController
                             Modifier.size(30.dp)
                         )
                         Text(
-                            text = " alexia.bayol@etud.univ-jfc.fr",
-                            fontSize = 20.sp,
+                            text = "  alexia.bayol@etud.univ-jfc.fr",
+                            fontSize = 25.sp,
                             color = Color.White
                         )
                         Spacer(Modifier.size(50.dp))
@@ -70,16 +74,18 @@ import androidx.navigation.NavController
                             Modifier.size(30.dp)
                         )
                         Text(
-                            text = "   alexiabyl",
-                            fontSize = 20.sp,
+                            text = "  alexiabyl",
+                            fontSize = 25.sp,
                             color = Color.White
                         )
                         Spacer(Modifier.size(70.dp))
                     }
-                    Button(onClick = { navController.navigate("Films")
-                    }) {
+                    Button(onClick = { navController.navigate("Films")},colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
+                    )
+                        {
                         Text(
                             text = "Démarrer",
+                            color = Color.White
                         )
                     }
                 }
@@ -87,8 +93,8 @@ import androidx.navigation.NavController
             }
 
             else -> {
-                Row() {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Row(modifier = Modifier.background(Color.Black).fillMaxSize()) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally, ) {
                         Image(
                             painterResource(id = R.drawable.alexia_bayol),
                             contentDescription = "C'est Alex",
@@ -98,13 +104,16 @@ import androidx.navigation.NavController
                             text = "Alexia Bayol",
                             fontSize = 60.sp,
                             fontWeight = FontWeight.Bold,
-                            color = Color.Black
+                            color = Color.Red
                         )
                         Spacer(Modifier.size(15.dp))
                         Text(
                             text = "Elève ingénieur ISIS en FIE4",
-                            fontSize = 40.sp,
-                        )
+                            fontSize = 30.sp,
+                            color = Color.White,
+                            fontStyle = FontStyle.Italic,
+                            fontWeight = FontWeight.Bold,
+                            )
                     }
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Spacer(Modifier.size(100.dp))
@@ -117,7 +126,8 @@ import androidx.navigation.NavController
                             )
                             Text(
                                 text = "alexia.bayol@etud.univ-jfc.fr",
-                                fontSize = 30.sp,
+                                fontSize = 25.sp,
+                                color = Color.White
                             )
                             Spacer(Modifier.size(50.dp))
                         }
@@ -129,12 +139,12 @@ import androidx.navigation.NavController
                             )
                             Text(
                                 text = "alexiabyl",
-                                fontSize = 30.sp,
+                                fontSize = 25.sp,
+                                color = Color.White
                             )
                             Spacer(Modifier.size(70.dp))
                         }
-                        Button(onClick = { navController.navigate("Films")
-                        }) {
+                        Button(onClick = { navController.navigate("Films")}, colors = ButtonDefaults.buttonColors(containerColor = Color.Red)) {
                             Text(
                                 text = "Démarrer",
                             )
@@ -144,3 +154,4 @@ import androidx.navigation.NavController
             }
         }
     }
+
