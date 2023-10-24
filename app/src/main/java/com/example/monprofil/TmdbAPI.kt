@@ -9,14 +9,19 @@ interface TmdbAPI {
 
     //Films
     @GET("trending/movie/week")
-    suspend fun getFilmSemaine(@Query("api_key") apikey: String) : TmdbMoviesResult
+    suspend fun getFilmSemaine(@Query("api_key") apikey: String): TmdbMoviesResult
 
     @GET("movie/{movie_id}?append_to_response=credits")
-    suspend fun getFilmDetail(@Path("movie_id") movieID: String, @Query("api_key") apikey: String): MoviesInfos
+    suspend fun getFilmDetail(
+        @Path("movie_id") movieID: String,
+        @Query("api_key") apikey: String
+    ): MoviesInfos
 
     @GET("search/movie")
-    suspend fun getFilmsParMotCle(@Query("api_key") apikey: String, @Query("query") motcle: String) : TmdbMovieRechercheResult
-
+    suspend fun getFilmsParMotCle(
+        @Query("api_key") apikey: String,
+        @Query("query") motcle: String
+    ): TmdbMovieRechercheResult
 
 
     //Acteurs
@@ -24,19 +29,31 @@ interface TmdbAPI {
     suspend fun getActorsOfTheWeek(@Query("api_key") apikey: String): TmdbActorsResult
 
     @GET("person/{person_id}?append_to_response=credits")
-    suspend fun getActeurDetail(@Path("person_id") acteurID: String, @Query("api_key") apiKey: String) : ActeursInfos
+    suspend fun getActeurDetail(
+        @Path("person_id") acteurID: String,
+        @Query("api_key") apiKey: String
+    ): ActeursInfos
 
     @GET("search/person")
-    suspend fun getActeurParMotCle(@Query("api_key") apikey: String, @Query("query") motcle: String) : TmdbActeurRechercheResult
+    suspend fun getActeurParMotCle(
+        @Query("api_key") apikey: String,
+        @Query("query") motcle: String
+    ): TmdbActeurRechercheResult
 
 
     //Series
     @GET("trending/tv/week")
-    suspend fun getSeriesOfTheWeek(@Query("api_key") apikey: String) : TmdbSeriesResult
+    suspend fun getSeriesOfTheWeek(@Query("api_key") apikey: String): TmdbSeriesResult
 
     @GET("tv/{serie_id}?append_to_response=credits")
-    suspend fun getSerieDetail(@Path("serie_id") serieID: String, @Query("api_key") apikey: String): SeriesInfos
+    suspend fun getSerieDetail(
+        @Path("serie_id") serieID: String,
+        @Query("api_key") apikey: String
+    ): SeriesInfos
 
     @GET("search/tv")
-    suspend fun getSerieParMotCle(@Query("api_key") apikey: String, @Query("query") motcle: String) : TmdbSerieRechercheResult
+    suspend fun getSerieParMotCle(
+        @Query("api_key") apikey: String,
+        @Query("query") motcle: String
+    ): TmdbSerieRechercheResult
 }
