@@ -22,7 +22,6 @@ class MainActivity : ComponentActivity() {
         val viewModel :  MainViewModel by viewModels()
         setContent {
             MonProfilTheme {
-                // A surface container using the 'background' color from the theme
                 val windowSizeClass = calculateWindowSizeClass(this)
                 val navController = rememberNavController()
                 NavHost(navController = navController, startDestination = "Profil") {

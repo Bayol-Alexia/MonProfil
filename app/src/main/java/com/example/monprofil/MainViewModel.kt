@@ -40,7 +40,6 @@ class MainViewModel(savedStateHandle: SavedStateHandle) : ViewModel() {
         }
     }
 
-
     fun FilmsWeek(){
         viewModelScope.launch {
         movies.value = service.getFilmSemaine(apikey).results
@@ -57,7 +56,6 @@ class MainViewModel(savedStateHandle: SavedStateHandle) : ViewModel() {
             acteurs.value = service.getActorsOfTheWeek(apikey).results
         }
     }
-
 
     fun InfoMovie(movieID: String) {
         viewModelScope.launch {
